@@ -145,15 +145,19 @@ const createUser = async (req, res) => {
         subject: 'welcome to our platform',
         text: `Hello ${firstName} ${lastName}, Your account has been created successfully. Your password is ${password}`,
       });
+      return res.status(201).json({
+        status: 'success',
+        message: 'User created succesfully',
+        userData: {
+          id: user._id,
+          password: password,
+        },
+      });
     }
 
-    return res.status(201).json({
-      status: 'success',
-      message: 'User created succesfully',
-      userData: {
-        id: user._id,
-        password: password,
-      },
+    return res.status(400).json({
+      status: 'error',
+      message: 'Something went wrong while creating user',
     });
   } catch (error) {
     console.log(error);

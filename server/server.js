@@ -1,6 +1,5 @@
-import app from './app.js';
-
 import 'dotenv/config';
+import app from './app.js';
 
 import connectDatabase from './config/database.js';
 
@@ -16,7 +15,7 @@ connectDatabase();
 
 const port = process.env.PORT || 4000;
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`The server is successfully running on port ${port}`);
 });
 
