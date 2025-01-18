@@ -26,7 +26,7 @@ const userSchema = mongoose.Schema(
       type: String,
       required: [true, 'Please add a designation'],
     },
-    creatorid: {
+    creatorId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'user',
     },

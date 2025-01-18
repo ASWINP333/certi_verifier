@@ -111,7 +111,8 @@ const login = async (req, res) => {
 const createUser = async (req, res) => {
   try {
     const { firstName, lastName, email, phoneNumber, designation } = req.body;
-    const creatorid = '';
+    const id = req.user._id;
+    const creatorId = id;
     if (!firstName || !email || !phoneNumber || !designation) {
       return res.status(404).json({
         status: 'failed',
@@ -137,6 +138,7 @@ const createUser = async (req, res) => {
       password: hashedPassword,
       phoneNumber,
       designation,
+      creatorId,
     });
 
     if (user) {
@@ -169,4 +171,51 @@ const createUser = async (req, res) => {
   }
 };
 
-export const userController = { register, login, createUser };
+// Get all users - Admin
+const getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find();
+
+    res.status(200).json({
+      status: 'success',
+      message: 'All users fetched successfully',
+      data: users,
+    });
+  } catch (error) {
+    console.log(error.message);
+
+    res.status(400).json({
+      status: 'error',
+      message: 'Something went wrong while fetching users',
+    });
+  }
+};
+
+// Get all users - Admin
+const getMyUsers = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const users = await User.find({ creatorId: userId });
+
+    res.status(200).json({
+      status: 'success',
+      message: 'All users fetched successfully',
+      data: users,
+    });
+  } catch (error) {
+    console.log(error.message);
+
+    res.status(400).json({
+      status: 'error',
+      message: 'Something went wrong while fetching users',
+    });
+  }
+};
+
+export const userController = {
+  register,
+  login,
+  createUser,
+  getAllUsers,
+  getMyUsers,
+};

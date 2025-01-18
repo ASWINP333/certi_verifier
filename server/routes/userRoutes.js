@@ -3,8 +3,12 @@ import { userController } from '../controllers/index.js';
 
 const userRoutes = express.Router();
 
-userRoutes.route('/register').post(userController.register);
+import authenticate from '../middlewares/authMiddleware.js';
+
+userRoutes.route('/register').post(authenticate.user, userController.register);
 userRoutes.route('/login').post(userController.login);
-userRoutes.route('/create').post(userController.createUser);
+userRoutes.route('/create').post(authenticate.user, userController.createUser);
+userRoutes.route('/all').get(authenticate.user, userController.getAllUsers);
+userRoutes.route('/myUsers').get(authenticate.user, userController.getMyUsers);
 
 export default userRoutes;
