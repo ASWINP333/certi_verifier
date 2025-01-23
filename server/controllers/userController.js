@@ -79,7 +79,7 @@ const login = async (req, res) => {
     if (user && (await bcrypt.compare(password, user.password))) {
       return res.status(200).json({
         status: 'success',
-        message: `Welsome back ${firstName} ${lastName}`,
+        message: `Welcome back ${firstName} ${lastName}`,
         token: await generateToken(_id),
         user: {
           _id,
@@ -212,10 +212,43 @@ const getMyUsers = async (req, res) => {
   }
 };
 
+// Delete user
+const deleteUser = async (req, res) => {
+  try {
+    const { id } = req.query;
+
+    const user = await User.findByIdAndDelete({ _id: id });
+    if (!user) {
+      return res.status(404).json({
+        status: 'failed',
+        message: 'User not found',
+      });
+    }
+
+    return res.status(200).json({
+      status: 'success',
+      message: 'User deleted successfully',
+    });
+  } 
+
+catch (error) {
+  
+  console.log(error.message);
+
+  res.status(400).json({
+    status: 'error',
+    message: 'Something went wrong while deleting user',
+  });
+
+ }
+}
+
+
 export const userController = {
   register,
   login,
   createUser,
   getAllUsers,
   getMyUsers,
+  deleteUser,
 };
