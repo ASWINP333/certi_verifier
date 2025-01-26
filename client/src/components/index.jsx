@@ -1,4 +1,5 @@
-import LoginInput from "./formComponents/loginInput";
-import Footer from "./footer";
+import LoginInput from './formComponents/loginInput';
+import Footer from './footer';
+import PasswordInput from './formComponents/passwordInput';
 
-export {LoginInput,Footer};
+export { LoginInput, Footer, PasswordInput };

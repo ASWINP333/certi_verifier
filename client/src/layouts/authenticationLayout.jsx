@@ -1,7 +1,7 @@
 import { Flex } from '@chakra-ui/react';
-
 import { Outlet } from 'react-router-dom';
 import { Footer } from '../components';
+import { MainBg } from '../assets';
 
 const AuthenticationLayout = () => {
   return (
@@ -12,8 +12,10 @@ const AuthenticationLayout = () => {
       flexDir='column'
       alignItems='center'
       justifyContent='center'
-      bg='brand.mainBg'
       overflow='hidden'
+      backgroundImage={`url(${MainBg})`}
+      backgroundSize='cover'
+      backgroundPosition='center'
     >
       <Outlet />
       <Footer />
