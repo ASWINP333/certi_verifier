@@ -1,6 +1,7 @@
 import { User } from '../models/index.js';
 import sendEmail from '../services/nodemailer.js';
 import {
+  generateOtp,
   generatePassword,
   generateToken,
   hashPassword,
@@ -229,20 +230,96 @@ const deleteUser = async (req, res) => {
       status: 'success',
       message: 'User deleted successfully',
     });
-  } 
+  } catch (error) {
+    console.log(error.message);
 
-catch (error) {
-  
-  console.log(error.message);
+    res.status(400).json({
+      status: 'error',
+      message: 'Something went wrong while deleting user',
+    });
+  }
+};
 
-  res.status(400).json({
-    status: 'error',
-    message: 'Something went wrong while deleting user',
-  });
+const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
 
- }
-}
+    const user = await User.findOne({ email });
 
+    if (!user) {
+      return res
+        .status(404)
+        .json({ status: 'failed', message: 'user not found' });
+    }
+
+    const otp = await generateOtp();
+
+    const otpExpires = new Date(Date.now() + 10 * 60 * 1000);
+
+    user.otp = otp;
+    user.otpExpire = otpExpires;
+
+    await user.save();
+
+    await sendEmail({
+      to: email,
+      subject: 'Forgot Password ?',
+      text: `Hello ${user.firstName} ${user.lastName}, Your OTP for password reset is ${otp}. It is valid for 10 Minutes.`,
+    });
+
+    return res.status(200).json({
+      status: 'success',
+      message: 'OTP Sent successfully, Please check your email.',
+    });
+  } catch (error) {
+    console.log(error.message);
+
+    res.status(400).json({
+      status: 'error',
+      message: 'Something went wrong while sending otp',
+    });
+  }
+};
+
+const verifyOtp = async (req, res) => {
+  try {
+    const { email, otp } = req.body;
+
+    const user = await User.findOne({ email });
+
+    if (!user || user.otp !== otp || user.otpExpire < new Date()) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Invalid or expired otp',
+      });
+    }
+
+    const tempPassword = await generatePassword();
+
+    user.password = await hashPassword(tempPassword);
+    user.otp = null;
+    user.otpExpire = null;
+    await user.save();
+
+    await sendEmail({
+      to: email,
+      subject: 'Temporary password',
+      text: `Hello ${user.firstName} ${user.lastName}, Your temporary password is ${tempPassword}. Please log in and reset your password immediately.`,
+    });
+
+    return res.status(200).json({
+      status: 'success',
+      message: 'Temporary Password sent to your email.',
+    });
+  } catch (error) {
+    console.log(error.message);
+
+    res.status(400).json({
+      status: 'error',
+      message: 'Something went wrong while verifying otp',
+    });
+  }
+};
 
 export const userController = {
   register,
@@ -251,4 +328,6 @@ export const userController = {
   getAllUsers,
   getMyUsers,
   deleteUser,
+  forgotPassword,
+  verifyOtp,
 };

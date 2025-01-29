@@ -30,3 +30,8 @@ export const generatePassword = async () => {
   const password = Math.random().toString(36).slice(-8);
   return password;
 };
+
+export const generateOtp = async () => {
+  const otp = Math.floor(100000 + Math.random() * 900000).toString();
+  return otp;
+};
