@@ -65,7 +65,8 @@ const createCertificate = async (req, res) => {
 
 const getAllCertificates = async (req, res) => {
   try {
-    const certificates = await Certificate.find();
+    const certificates =
+      await Certificate.find().populate('institutionDetails');
     return res.status(200).json({
       status: 'success',
       message: 'Certificates fetched successfully',
@@ -84,7 +85,9 @@ const getAllCertificates = async (req, res) => {
 const getSingleCertificate = async (req, res) => {
   try {
     const { cId } = req.params;
-    const certificate = await Certificate.findOne({ cId: cId });
+    const certificate = await Certificate.findOne({ cId: cId }).populate(
+      'institutionDetails'
+    );
 
     return res.status(200).json({
       status: 'success',

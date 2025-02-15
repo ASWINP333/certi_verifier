@@ -7,18 +7,18 @@ import { certificateController } from '../controllers/index.js';
 
 certificateRoutes
   .route('/create')
-  .post(certificateController.createCertificate);
+  .post(authenticate.user, certificateController.createCertificate);
 certificateRoutes
   .route('/getAll')
-  .get(certificateController.getAllCertificates);
+  .get(authenticate.user, certificateController.getAllCertificates);
 certificateRoutes
-  .route('/get/:iId')
-  .get(certificateController.getSingleCertificate);
+  .route('/get/:cId')
+  .get(authenticate.user, certificateController.getSingleCertificate);
 certificateRoutes
-  .route('/update/:iId')
-  .put(certificateController.updateCertificate);
+  .route('/update/:cId')
+  .put(authenticate.user, certificateController.updateCertificate);
 certificateRoutes
-  .route('/delete/:iId')
-  .delete(certificateController.deleteCertificate);
+  .route('/delete/:cId')
+  .delete(authenticate.user, certificateController.deleteCertificate);
 
 export default certificateRoutes;
