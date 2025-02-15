@@ -321,6 +321,54 @@ const verifyOtp = async (req, res) => {
   }
 };
 
+const resetPassword = async (req, res) => {
+  try {
+    const { email, oldPassword, newPassword } = req.body;
+
+    if (!email || !oldPassword || !newPassword) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Please provide email, old password, and new password',
+      });
+    }
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({
+        status: 'failed',
+        message: 'User not found',
+      });
+    }
+
+    const isPasswordMatch = await bcrypt.compare(oldPassword, user.password);
+
+    if (!isPasswordMatch) {
+      return res.status(401).json({
+        status: 'failed',
+        message: 'Old password is incorrect',
+      });
+    }
+
+    // Hash the new password
+    const hashedPassword = await hashPassword(newPassword);
+
+    user.password = hashedPassword;
+    await user.save();
+
+    return res.status(200).json({
+      status: 'success',
+      message: 'Password updated successfully',
+    });
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({
+      status: 'error',
+      message: 'Something went wrong while resetting the password',
+    });
+  }
+};
+
 export const userController = {
   register,
   login,
@@ -330,4 +378,5 @@ export const userController = {
   deleteUser,
   forgotPassword,
   verifyOtp,
+  resetPassword,
 };
