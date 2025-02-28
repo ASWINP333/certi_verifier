@@ -8,6 +8,9 @@ const theme = extendTheme({
       bg: 'linear-gradient(90deg, #3F3F3F 100%, #1E1E1E 100%,#1E1E1E 100%)',
       white: '#FFFFFF',
       black: '#000000',
+      dashboardBg: '#2B2B2B',
+      sidebarMainBg: '#171717',
+      mainTeal: '#0996A1',
     },
   },
   fonts: {

@@ -1,35 +1,38 @@
 import { Button, chakra, Flex, Image, Text } from '@chakra-ui/react';
-import { LoginInput, PasswordInput } from '../../components';
-import { IoMdLock, IoMdMail } from 'react-icons/io';
+import { LoginInput } from '../../components';
+import { IoMdMail } from 'react-icons/io';
 import { SLogo } from '../../assets';
 import { useState } from 'react';
 import axios from 'axios';
-import { ToastContainer, toast } from 'react-toastify';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
 
-const Login = () => {
-  const [show, setShow] = useState(false);
-
-  const handleClick = () => setShow(!show);
-
+const ForgotPassword = () => {
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const response = await axios.post(
-        `http://localhost:4000/api/v1/user/login`,
+        `http://localhost:4000/api/v1/user/forgot`,
         {
           email,
-          password,
         }
       );
 
+      toast.success(response?.data?.message);
+      console.log(response?.data?.status);
+
       if (response.data.status === 'success') {
         toast.success(response?.data?.message);
+        setLoading(false);
+        navigate(`/otp-verify?email=${email}`);
       }
     } catch (error) {
+      setLoading(false);
       toast.error(error?.response?.data?.message);
     }
   };
@@ -64,7 +67,7 @@ const Login = () => {
                 fontFamily='sans-serif'
                 color='brand.white'
               >
-                User Login
+                Forgot Password
               </Text>
             </Flex>
             <Flex
@@ -87,40 +90,43 @@ const Login = () => {
                 mb='5'
                 onChange={(e) => setEmail(e.target.value)}
               />
-              <PasswordInput
-                // type='password'
-                id='password'
-                placeholder='Password'
-                iconColor='#00000099'
-                iconLeft={IoMdLock}
-                bgColor='brand.white'
-                isRequired
-                mb='5'
-                show={show}
-                handleClick={handleClick}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-              <Flex as={Link} to='/forgot' w='full' justifyContent='flex-end'>
-                <Button variant='unstyled' color='brand.mainBg'>
-                  Forgot Password ?
+              <Flex w='full' justify='space-between'>
+                <Button
+                  as={Link}
+                  to='/'
+                  variant='solid'
+                  bg='#222222'
+                  color='white'
+                  justify-content='center'
+                  align-items='center'
+                  borderRadius='0.7rem'
+                  fontSize='1.125rem'
+                  fontWeight='bold'
+                  w='48%'
+                  mt='4'
+                  _hover={{ bg: '#6D99A1' }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  variant='solid'
+                  bg='#222222'
+                  color='white'
+                  justify-content='center'
+                  align-items='center'
+                  borderRadius='0.7rem'
+                  fontSize='1.125rem'
+                  fontWeight='bold'
+                  type='submit'
+                  w='48%'
+                  mt='4'
+                  _hover={{ bg: '#6D99A1' }}
+                  isLoading={loading}
+                  loadingText='Sending...'
+                >
+                  Submit
                 </Button>
               </Flex>
-              <Button
-                variant='solid'
-                bg='#222222'
-                color='white'
-                justify-content='center'
-                align-items='center'
-                borderRadius='0.7rem'
-                fontSize='1.125rem'
-                fontWeight='bold'
-                type='submit'
-                w='full'
-                mt='4'
-                _hover={{ bg: '#6D99A1' }}
-              >
-                Login
-              </Button>
             </Flex>
           </Flex>
         </Flex>
@@ -130,4 +136,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default ForgotPassword;
