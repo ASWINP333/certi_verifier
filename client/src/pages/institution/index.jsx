@@ -11,11 +11,18 @@ import { useEffect, useMemo, useState } from 'react';
 import axios from 'axios';
 import { MdDelete, MdEdit } from 'react-icons/md';
 import DeleteInstituion from './deleteInstituion';
+import UpdateInstitution from './updateInstitution';
 const InstitutionList = () => {
   const [institutionData, setInstitutionData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [deleteId, setDeleteId] = useState();
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [selectedInstitution, setSelectedInstitution] = useState({});
+  const { isOpen, onOpen, onClose } = useDisclosure(); // delete modal
+  const {
+    isOpen: isModalOpen,
+    onOpen: onModalOpen,
+    onClose: onModalClose,
+  } = useDisclosure(); // update modal
 
   useEffect(() => {
     getInstitutionData();
@@ -60,6 +67,10 @@ const InstitutionList = () => {
               color='brand.white'
               fontSize='1.2rem'
               _hover={{ bg: 'transparent' }}
+              onClick={() => {
+                setSelectedInstitution(cell);
+                onModalOpen();
+              }}
             >
               <MdEdit />
             </Button>
@@ -112,7 +123,7 @@ const InstitutionList = () => {
                   columns={columns}
                   data={institutionData}
                   buttonName='Add Institution'
-                  buttonLink='/'
+                  buttonLink='/user/institutions/create'
                   isButton={true}
                   isPagination={true}
                 />
@@ -125,6 +136,13 @@ const InstitutionList = () => {
       </Flex>
       <MainModal isOpen={isOpen} onClose={onClose}>
         <DeleteInstituion onClose={onClose} id={deleteId} />
+      </MainModal>
+      <MainModal
+        isOpen={isModalOpen}
+        onClose={onModalClose}
+        bgColor='brand.dashboardBg'
+      >
+        <UpdateInstitution onClose={onModalClose} Idata={selectedInstitution} />
       </MainModal>
     </Flex>
   );

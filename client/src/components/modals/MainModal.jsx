@@ -16,6 +16,7 @@ const MainModal = ({
   isOpen,
   size,
   title,
+  bgColor,
 }) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose} size={size} isCentered>
@@ -30,7 +31,7 @@ const MainModal = ({
       >
         <ModalCloseButton />
         {title && <ModalHeader>{title}</ModalHeader>}
-        <ModalBody>{children}</ModalBody>
+        <ModalBody bg={bgColor}>{children}</ModalBody>
         {footerContent && <ModalFooter>{footerContent}</ModalFooter>}
       </ModalContent>
     </Modal>
@@ -44,6 +45,7 @@ MainModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   size: PropTypes.string,
   title: PropTypes.string,
+  bgColor: PropTypes.string,
 };
 
 export default MainModal;

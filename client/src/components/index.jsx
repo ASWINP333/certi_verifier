@@ -4,6 +4,7 @@ import PasswordInput from './formComponents/passwordInput';
 import DesktopSidebar from './sidebars/desktopSidebar';
 import TableComponent from './tables/mainTable';
 import MainModal from './modals/MainModal';
+import FormInput from './formComponents/formInput';
 
 export {
   LoginInput,
@@ -12,4 +13,5 @@ export {
   DesktopSidebar,
   TableComponent,
   MainModal,
+  FormInput,
 };

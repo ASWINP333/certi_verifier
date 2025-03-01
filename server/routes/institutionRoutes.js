@@ -7,7 +7,7 @@ import { institutionController } from '../controllers/index.js';
 
 institutionRoutes
   .route('/create')
-  .post(authenticate.user, institutionController.createInstitution);
+  .post(institutionController.createInstitution);
 institutionRoutes
   .route('/getAll')
   .get(institutionController.getAllInstitutions);
@@ -16,7 +16,7 @@ institutionRoutes
   .get(authenticate.user, institutionController.getInstitutionById);
 institutionRoutes
   .route('/update/:iId')
-  .put(authenticate.user, institutionController.updateInstitution);
+  .put(institutionController.updateInstitution);
 institutionRoutes
   .route('/delete/:iId')
   .delete(institutionController.deleteInstitution);

@@ -1,5 +1,6 @@
 import { AuthenticationLayout, DesktopLayout } from '../layouts';
 import {
+  CreateInstition,
   Dashboard,
   ForgotPassword,
   InstitutionList,
@@ -26,6 +27,7 @@ const routes = [
     children: [
       { path: 'dashboard', element: <Dashboard /> },
       { path: 'institutions', element: <InstitutionList /> },
+      { path: 'institutions/create', element: <CreateInstition /> },
     ],
   },
 ];
