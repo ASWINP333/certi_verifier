@@ -1,5 +1,11 @@
 import { AuthenticationLayout, DesktopLayout } from '../layouts';
-import { Dashboard, ForgotPassword, Login, VerifyOtp } from '../pages';
+import {
+  Dashboard,
+  ForgotPassword,
+  InstitutionList,
+  Login,
+  VerifyOtp,
+} from '../pages';
 
 const routes = [
   {
@@ -17,7 +23,10 @@ const routes = [
     path: 'user',
     element: <DesktopLayout />,
     index: true,
-    children: [{ path: 'dashboard', element: <Dashboard /> }],
+    children: [
+      { path: 'dashboard', element: <Dashboard /> },
+      { path: 'institutions', element: <InstitutionList /> },
+    ],
   },
 ];
 

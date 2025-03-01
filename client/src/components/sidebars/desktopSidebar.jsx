@@ -8,7 +8,9 @@ const DesktopSidebar = () => {
   return (
     <Flex w='16rem' h='100vh' bg='brand.sidebarMainBg'>
       <Flex direction='column' alignItems='center' gap='10'>
-        <Image src={SLogo} alt='Secondary Logo' />
+        <Link to='/user/dashboard'>
+          <Image src={SLogo} alt='Secondary Logo' />
+        </Link>
         <Flex
           w='8rem'
           h='5rem'
@@ -19,28 +21,37 @@ const DesktopSidebar = () => {
           borderColor='brand.mainTeal'
           alignItems='center'
           justify='center'
+          gap='2'
         >
-          <FaRegUser />
-          <Text>ADMIN</Text>
+          <FaRegUser size='1.5rem' />
+          <Text color='brand.white' fontSize='1.2rem' fontWeight='bold'>
+            ADMIN
+          </Text>
         </Flex>
-        <Flex direction='column' alignItems='center' gap='4'>
-          <Flex direction='column' alignItems='center' gap='4'>
-            <Link>
+        <Flex direction='column' alignItems='center' gap='5'>
+          <Flex direction='column' alignItems='center' gap='6'>
+            <Link to='/user/dashboard'>
               <Text color='brand.white'>Dashboard</Text>
             </Link>
-            <Divider w='12rem' colorScheme='teal' th />
+            <Divider w='12rem' borderColor='brand.mainTeal' />
+          </Flex>
+          <Flex direction='column' alignItems='center' gap='4'>
+            <Link to='/user/institutions'>
+              <Text color='brand.white'>Institutions</Text>
+            </Link>
+            <Divider w='12rem' borderColor='brand.mainTeal' />
           </Flex>
           <Flex direction='column' alignItems='center' gap='4'>
             <Link>
               <Text color='brand.white'>Dashboard</Text>
             </Link>
-            <Divider w='12rem' colorScheme='teal' th />
+            <Divider w='12rem' borderColor='brand.mainTeal' />
           </Flex>
           <Flex direction='column' alignItems='center' gap='4'>
             <Link>
               <Text color='brand.white'>Dashboard</Text>
             </Link>
-            <Divider w='12rem' colorScheme='teal' th />
+            <Divider w='12rem' borderColor='brand.mainTeal' />
           </Flex>
         </Flex>
         <Flex color='brand.mainTeal' alignItems='center' mt='32'>

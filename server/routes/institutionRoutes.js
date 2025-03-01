@@ -10,7 +10,7 @@ institutionRoutes
   .post(authenticate.user, institutionController.createInstitution);
 institutionRoutes
   .route('/getAll')
-  .get(authenticate.user, institutionController.getAllInstitutions);
+  .get(institutionController.getAllInstitutions);
 institutionRoutes
   .route('/get/:iId')
   .get(authenticate.user, institutionController.getInstitutionById);
