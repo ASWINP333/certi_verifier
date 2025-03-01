@@ -19,7 +19,7 @@ const CreateInstition = () => {
   const [address, setAddress] = useState('');
   const [loading, setloading] = useState(false);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -42,7 +42,7 @@ const CreateInstition = () => {
           response?.data?.message || 'Institution Created successfully'
         );
         setloading(false);
-        navigate('/user/institutions')
+        navigate('/user/institutions');
       }
     } catch (error) {
       setloading(false);
@@ -115,8 +115,11 @@ const CreateInstition = () => {
               _hover={{ bg: 'yellow.300' }}
               borderRadius='0.7rem'
               size='sm'
+              onClick={()=>{
+                navigate('/user/institutions')
+              }}
             >
-              Cancel
+              Back
             </Button>
             <Button
               w='48%'
