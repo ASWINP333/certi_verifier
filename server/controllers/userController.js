@@ -11,8 +11,15 @@ import bcrypt from 'bcrypt';
 // Register New User
 const register = async (req, res) => {
   try {
-    const { firstName, lastName, email, password, phoneNumber, designation } =
-      req.body;
+    const {
+      firstName,
+      lastName,
+      email,
+      password,
+      phoneNumber,
+      designation,
+      institutionDetails,
+    } = req.body;
 
     if (!firstName || !email || !password || !phoneNumber || !designation) {
       return res.status(404).json({
@@ -38,6 +45,7 @@ const register = async (req, res) => {
       password: hashedPassword,
       phoneNumber,
       designation,
+      institutionDetails,
     });
 
     return res.status(201).json({
@@ -111,7 +119,14 @@ const login = async (req, res) => {
 
 const createUser = async (req, res) => {
   try {
-    const { firstName, lastName, email, phoneNumber, designation } = req.body;
+    const {
+      firstName,
+      lastName,
+      email,
+      phoneNumber,
+      designation,
+      institutionDetails,
+    } = req.body;
     const id = req.user._id;
     const creatorId = id;
     if (!firstName || !email || !phoneNumber || !designation) {
@@ -140,6 +155,7 @@ const createUser = async (req, res) => {
       phoneNumber,
       designation,
       creatorId,
+      institutionDetails,
     });
 
     if (user) {
@@ -175,7 +191,7 @@ const createUser = async (req, res) => {
 // Get all users - Admin
 const getAllUsers = async (req, res) => {
   try {
-    const users = await User.find();
+    const users = await User.find().populate('institutionDetails');
 
     res.status(200).json({
       status: 'success',
@@ -196,7 +212,9 @@ const getAllUsers = async (req, res) => {
 const getMyUsers = async (req, res) => {
   try {
     const userId = req.user._id;
-    const users = await User.find({ creatorId: userId });
+    const users = await User.find({ creatorId: userId }).populate(
+      'institutionDetails'
+    );
 
     res.status(200).json({
       status: 'success',

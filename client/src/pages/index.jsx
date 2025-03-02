@@ -4,6 +4,8 @@ import VerifyOtp from './login/otpVerify';
 import Dashboard from './dashboard';
 import InstitutionList from './institution';
 import CreateInstition from './institution/createInstition';
+import UsersList from './user';
+import CreateUser from './user/createUser';
 
 export {
   Login,
@@ -12,4 +14,6 @@ export {
   Dashboard,
   InstitutionList,
   CreateInstition,
+  UsersList,
+  CreateUser,
 };

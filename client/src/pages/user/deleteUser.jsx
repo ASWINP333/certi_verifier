@@ -1,17 +1,19 @@
 import { Button, Flex, Text } from '@chakra-ui/react';
-import axiosInstance from '../../config/axiosInstance';
+import axios from 'axios';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const DeleteInstitution = ({ onClose, id }) => {
+const DeleteUser = ({ onClose, id }) => {
   const [loading, setLoading] = useState(false);
 
   const handleDelete = async () => {
     try {
       setLoading(true);
-      const response = await axiosInstance.delete(`institution/delete/${id}`);
+      const response = await axios.delete(
+        `http://localhost:4000/api/v1/institution/delete/${id}`
+      );
 
       if (response.status === 200) {
         toast.success(
@@ -80,9 +82,9 @@ const DeleteInstitution = ({ onClose, id }) => {
   );
 };
 
-DeleteInstitution.propTypes = {
+DeleteUser.propTypes = {
   id: PropTypes.any.isRequired,
   onClose: PropTypes.func.isRequired,
 };
 
-export default DeleteInstitution;
+export default DeleteUser;

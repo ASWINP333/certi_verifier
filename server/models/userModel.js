@@ -22,6 +22,11 @@ const userSchema = mongoose.Schema(
       type: Number,
       required: [true, 'please enter a phone number'],
     },
+    institutionDetails: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Institution',
+      required: [true, 'Institution reference is required'],
+    },
     designation: {
       type: String,
       required: [true, 'Please add a designation'],

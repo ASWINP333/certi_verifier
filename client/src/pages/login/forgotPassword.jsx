@@ -3,7 +3,7 @@ import { LoginInput } from '../../components';
 import { IoMdMail } from 'react-icons/io';
 import { SLogo } from '../../assets';
 import { useState } from 'react';
-import axios from 'axios';
+import axiosInstance from '../../config/axiosInstance';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 
@@ -16,12 +16,9 @@ const ForgotPassword = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await axios.post(
-        `http://localhost:4000/api/v1/user/forgot`,
-        {
-          email,
-        }
-      );
+      const response = await axiosInstance.post(`user/forgot`, {
+        email,
+      });
 
       toast.success(response?.data?.message);
       console.log(response?.data?.status);

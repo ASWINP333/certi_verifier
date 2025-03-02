@@ -10,7 +10,7 @@ import {
 } from '@chakra-ui/react';
 import { SLogo } from '../../assets';
 import { useState } from 'react';
-import axios from 'axios';
+import axiosInstance from '../../config/axiosInstance';
 import { ToastContainer, toast } from 'react-toastify';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
@@ -26,13 +26,10 @@ const VerifyOtp = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await axios.post(
-        `http://localhost:4000/api/v1/user/verify`,
-        {
-          email,
-          otp,
-        }
-      );
+      const response = await axiosInstance.post(`user/verify`, {
+        email,
+        otp,
+      });
 
       if (response.data.status === 'success') {
         console.log(response.data.message);

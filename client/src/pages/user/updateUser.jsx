@@ -1,12 +1,12 @@
 import { Button, chakra, Flex, Text } from '@chakra-ui/react';
 import { FormInput } from '../../components';
-import axiosInstance from '../../config/axiosInstance';
+import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
-const UpdateInstitution = ({ onClose, Idata }) => {
+const UpdateUser = ({ onClose, Idata }) => {
   const [btnLoading, setBtnLoading] = useState(false);
   const [institutionName, setInstitutionName] = useState(
     Idata?.institutionName || ''
@@ -29,8 +29,8 @@ const UpdateInstitution = ({ onClose, Idata }) => {
         address: address || Idata?.address,
       };
 
-      const response = await axiosInstance.put(
-        `institution/update/${Idata?.iId}`,
+      const response = await axios.put(
+        `http://localhost:4000/api/v1/institution/update/${Idata?.iId}`,
         updatedData
       );
 
@@ -125,8 +125,8 @@ const UpdateInstitution = ({ onClose, Idata }) => {
   );
 };
 
-UpdateInstitution.propTypes = {
+UpdateUser.propTypes = {
   Idata: PropTypes.object,
   onClose: PropTypes.func.isRequired,
 };
-export default UpdateInstitution;
+export default UpdateUser;

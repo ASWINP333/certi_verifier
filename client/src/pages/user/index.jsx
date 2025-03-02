@@ -7,16 +7,16 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 import { MainModal, TableComponent } from '../../components';
-import axiosInstance from '../../config/axiosInstance';
-import { MdDelete, MdEdit } from 'react-icons/md';
-import DeleteInstituion from './deleteInstituion';
-import UpdateInstitution from './updateInstitution';
 import { useEffect, useMemo, useState } from 'react';
-const InstitutionList = () => {
-  const [institutionData, setInstitutionData] = useState([]);
+import { MdDelete, MdEdit } from 'react-icons/md';
+import DeleteUser from './deleteUser';
+import UpdateUser from './updateUser';
+import axiosInstance from '../../config/axiosInstance';
+const UsersList = () => {
+  const [userData, setUserData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [deleteId, setDeleteId] = useState();
-  const [selectedInstitution, setSelectedInstitution] = useState({});
+  const [selectedUser, setSelectedUser] = useState({});
   const { isOpen, onOpen, onClose } = useDisclosure(); // delete modal
   const {
     isOpen: isModalOpen,
@@ -25,16 +25,18 @@ const InstitutionList = () => {
   } = useDisclosure(); // update modal
 
   useEffect(() => {
-    getInstitutionData();
+    getUsersData();
   }, []);
 
-  const getInstitutionData = async () => {
+  const getUsersData = async () => {
     try {
       setLoading(true);
-      const response = await axiosInstance.get(`institution/getAll`);
+      const response = await axiosInstance.get(`user/all`);
       if (response.data.status === 'success') {
+        console.log(response.data.data);
+
         setLoading(false);
-        setInstitutionData(response.data.institutions);
+        setUserData(response.data.data);
       }
     } catch (error) {
       setLoading(false);
@@ -45,16 +47,20 @@ const InstitutionList = () => {
   const columns = useMemo(
     () => [
       {
-        Header: 'ID',
-        accessor: 'iId',
-      },
-      {
         Header: 'Name',
-        accessor: 'institutionName',
+        accessor: 'firstName',
       },
       {
-        Header: 'Address',
-        accessor: 'address',
+        Header: 'Email',
+        accessor: 'email',
+      },
+      {
+        Header: 'Designation',
+        accessor: 'designation',
+      },
+      {
+        Header: 'Institution Name',
+        accessor: (row) => row?.institutionDetails?.institutionName || 'N/A',
       },
       {
         Header: 'Actions',
@@ -66,7 +72,7 @@ const InstitutionList = () => {
               fontSize='1.2rem'
               _hover={{ bg: 'transparent' }}
               onClick={() => {
-                setSelectedInstitution(cell);
+                setSelectedUser(cell);
                 onModalOpen();
               }}
             >
@@ -101,7 +107,7 @@ const InstitutionList = () => {
         gap='12'
       >
         <Heading color='brand.mainTeal' textTransform='uppercase'>
-          INSTITUTIONS
+          USERS LIST
         </Heading>
         <Flex w='100%' h='100%'>
           {loading ? (
@@ -116,12 +122,12 @@ const InstitutionList = () => {
             </Flex>
           ) : (
             <>
-              {institutionData.length !== 0 ? (
+              {userData.length !== 0 ? (
                 <TableComponent
                   columns={columns}
-                  data={institutionData}
-                  buttonName='Add Institution'
-                  buttonLink='/user/institutions/create'
+                  data={userData}
+                  buttonName='Add User'
+                  buttonLink='/user/users/create'
                   isButton={true}
                   isPagination={true}
                 />
@@ -133,17 +139,17 @@ const InstitutionList = () => {
         </Flex>
       </Flex>
       <MainModal isOpen={isOpen} onClose={onClose}>
-        <DeleteInstituion onClose={onClose} id={deleteId} />
+        <DeleteUser onClose={onClose} id={deleteId} />
       </MainModal>
       <MainModal
         isOpen={isModalOpen}
         onClose={onModalClose}
         bgColor='brand.dashboardBg'
       >
-        <UpdateInstitution onClose={onModalClose} Idata={selectedInstitution} />
+        <UpdateUser onClose={onModalClose} Idata={selectedUser} />
       </MainModal>
     </Flex>
   );
 };
 
-export default InstitutionList;
+export default UsersList;

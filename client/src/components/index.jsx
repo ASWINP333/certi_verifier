@@ -5,6 +5,7 @@ import DesktopSidebar from './sidebars/desktopSidebar';
 import TableComponent from './tables/mainTable';
 import MainModal from './modals/MainModal';
 import FormInput from './formComponents/formInput';
+import SelectInput from './formComponents/selectInput';
 
 export {
   LoginInput,
@@ -14,4 +15,5 @@ export {
   TableComponent,
   MainModal,
   FormInput,
+  SelectInput,
 };

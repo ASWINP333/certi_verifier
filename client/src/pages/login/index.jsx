@@ -3,34 +3,42 @@ import { LoginInput, PasswordInput } from '../../components';
 import { IoMdLock, IoMdMail } from 'react-icons/io';
 import { SLogo } from '../../assets';
 import { useState } from 'react';
-import axios from 'axios';
+import axiosInstance from '../../config/axiosInstance';
 import { ToastContainer, toast } from 'react-toastify';
-import { Link } from 'react-router-dom';
+import 'react-toastify/dist/ReactToastify.css';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuthentication } from '../../contexts/authContext';
 
 const Login = () => {
   const [show, setShow] = useState(false);
-
-  const handleClick = () => setShow(!show);
-
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  const navigate = useNavigate();
+  const authentication = useAuthentication();
+
+  const handleClick = () => setShow(!show);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
-        `http://localhost:4000/api/v1/user/login`,
-        {
-          email,
-          password,
-        }
-      );
+      const response = await axiosInstance.post(`user/login`, {
+        email,
+        password,
+      });
 
-      if (response.data.status === 'success') {
-        toast.success(response?.data?.message);
+      if (response?.data?.status === 'success') {
+        toast.success(response?.data?.message || 'Login Successfully');
+
+        const token = response?.data?.token;
+        const user = response?.data?.user;
+
+        authentication.loginIn(token, user, () => {
+          navigate('/user/dashboard');
+        });
       }
     } catch (error) {
-      toast.error(error?.response?.data?.message);
+      toast.error(error?.response?.data?.message || 'Error While Login');
     }
   };
   return (

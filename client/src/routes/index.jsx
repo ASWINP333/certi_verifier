@@ -1,10 +1,13 @@
+import { RequireAuth } from '../contexts/authContext';
 import { AuthenticationLayout, DesktopLayout } from '../layouts';
 import {
   CreateInstition,
+  CreateUser,
   Dashboard,
   ForgotPassword,
   InstitutionList,
   Login,
+  UsersList,
   VerifyOtp,
 } from '../pages';
 
@@ -22,12 +25,18 @@ const routes = [
   },
   {
     path: 'user',
-    element: <DesktopLayout />,
+    element: (
+      <RequireAuth>
+        <DesktopLayout />
+      </RequireAuth>
+    ),
     index: true,
     children: [
       { path: 'dashboard', element: <Dashboard /> },
       { path: 'institutions', element: <InstitutionList /> },
       { path: 'institutions/create', element: <CreateInstition /> },
+      { path: 'users', element: <UsersList /> },
+      { path: 'users/create', element: <CreateUser /> },
     ],
   },
 ];

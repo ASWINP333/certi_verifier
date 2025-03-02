@@ -8,7 +8,7 @@ import {
 } from '@chakra-ui/react';
 import { FormInput } from '../../components';
 import { useState } from 'react';
-import axios from 'axios';
+import axiosInstance from '../../config/axiosInstance';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
@@ -32,8 +32,8 @@ const CreateInstition = () => {
         iId: iId,
       };
 
-      const response = await axios.post(
-        `http://localhost:4000/api/v1/institution/create`,
+      const response = await axiosInstance.post(
+        `institution/create`,
         institutionData
       );
 
@@ -115,8 +115,8 @@ const CreateInstition = () => {
               _hover={{ bg: 'yellow.300' }}
               borderRadius='0.7rem'
               size='sm'
-              onClick={()=>{
-                navigate('/user/institutions')
+              onClick={() => {
+                navigate('/user/institutions');
               }}
             >
               Back
