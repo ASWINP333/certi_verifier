@@ -6,6 +6,8 @@ import InstitutionList from './institution';
 import CreateInstition from './institution/createInstition';
 import UsersList from './user';
 import CreateUser from './user/createUser';
+import Settings from './settings';
+import CertificateList from './certificates';
 
 export {
   Login,
@@ -16,4 +18,6 @@ export {
   CreateInstition,
   UsersList,
   CreateUser,
+  Settings,
+  CertificateList,
 };

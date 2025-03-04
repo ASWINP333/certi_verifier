@@ -9,7 +9,7 @@ const Footer = () => {
       justifyContent='center'
       alignItems='center'
       position='absolute'
-      color='brand.secondaryBg'
+      color='brand.mainTeal'
     >
       <Text opacity='.8' fontSize='1rem' fontWeight='bold'>
         Copyright © {currentYear} Certi Verifier

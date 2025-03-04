@@ -1,12 +1,14 @@
 import { RequireAuth } from '../contexts/authContext';
 import { AuthenticationLayout, DesktopLayout } from '../layouts';
 import {
+  CertificateList,
   CreateInstition,
   CreateUser,
   Dashboard,
   ForgotPassword,
   InstitutionList,
   Login,
+  Settings,
   UsersList,
   VerifyOtp,
 } from '../pages';
@@ -37,6 +39,8 @@ const routes = [
       { path: 'institutions/create', element: <CreateInstition /> },
       { path: 'users', element: <UsersList /> },
       { path: 'users/create', element: <CreateUser /> },
+      { path: 'certificates', element: <CertificateList /> },
+      { path: 'settings', element: <Settings /> },
     ],
   },
 ];

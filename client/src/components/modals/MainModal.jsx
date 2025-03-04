@@ -29,7 +29,7 @@ const MainModal = ({
         mx='auto'
         textAlign='center'
       >
-        <ModalCloseButton />
+        <ModalCloseButton color='brand.mainTeal' />
         {title && <ModalHeader>{title}</ModalHeader>}
         <ModalBody bg={bgColor}>{children}</ModalBody>
         {footerContent && <ModalFooter>{footerContent}</ModalFooter>}
