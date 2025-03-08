@@ -14,6 +14,7 @@ contract Certificate {
     }
 
     struct Cert {
+        string certificateId;
         string candidateName;
         string certificateName;
         string course;
@@ -22,17 +23,24 @@ contract Certificate {
         address issuedBy;
     }
 
-    mapping(uint256 => Cert) public Certificates;
+    mapping(string => Cert) public Certificates;
 
     function issue(
-        uint256 _id,
+        string memory _certificateUniqueId, 
+        string memory _certificateId, 
         string memory _candidateName,
         string memory _certificateName,
         string memory _course,
         string memory _grade,
         string memory _institutionName
     ) public onlyAdmin {
-        Certificates[_id] = Cert(
+        require(
+            bytes(Certificates[_certificateUniqueId].candidateName).length == 0,
+            "Certificate ID already exists"
+        );
+
+        Certificates[_certificateUniqueId] = Cert(
+            _certificateId, 
             _candidateName,
             _certificateName,
             _course,
@@ -42,10 +50,11 @@ contract Certificate {
         );
     }
 
-    function getCertificate(uint256 _id)
+    function getCertificate(string memory _certificateUniqueId)
         public
         view
         returns (
+            string memory certificateId,
             string memory candidateName,
             string memory certificateName,
             string memory course,
@@ -54,9 +63,10 @@ contract Certificate {
             address issuedBy
         )
     {
-        Cert memory cert = Certificates[_id];
+        Cert memory cert = Certificates[_certificateUniqueId];
 
         return (
+            cert.certificateId,
             cert.candidateName,
             cert.certificateName,
             cert.course,

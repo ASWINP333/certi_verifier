@@ -7,6 +7,11 @@ const certificateSchema = new mongoose.Schema(
       required: [true, 'Certificate ID is required'],
       unique: true,
     },
+    certificateUniqueId: {
+      type: String,
+      required: [true, 'Certificate unique is required'],
+      unique: true,
+    },
     candidateName: {
       type: String,
       required: [true, 'Candidate name is required'],

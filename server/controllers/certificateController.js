@@ -17,7 +17,15 @@ const createCertificate = async (req, res) => {
 
     const { _id } = req.user;
 
+    const institutionid = req.user.institutionDetails;
+
+    const institutionDetail = await Institution.findOne({
+      _id: institutionid,
+    });
+
     const issuedBy = _id;
+
+    const certificateUniqueId = cId + institutionDetail?.iId;
 
     if (
       !cId ||
@@ -42,18 +50,57 @@ const createCertificate = async (req, res) => {
       });
     }
 
-    const institutionDetail = await Institution.findOne({
-      _id: institutionDetails,
+    const certificate = await Certificate.create({
+      cId,
+      certificateUniqueId,
+      candidateName,
+      institutionDetails,
+      course,
+      grade,
+      certificateName,
+      issuedBy,
     });
+
+    return res.status(201).json({
+      status: 'success',
+      message: 'Certificate created succesfully',
+      certificateData: {
+        id: certificate._id,
+      },
+    });
+  } catch (error) {
+    console.log(error.message);
+
+    return res.status(400).json({
+      status: 'error',
+      message: 'Something went wrong while creating certificate',
+    });
+  }
+};
+
+const verifyCertificate = async (req, res) => {
+  try {
+    const { cId } = req.params;
+    const certificate = await Certificate.findOne({ cId: cId }).populate(
+      'institutionDetails'
+    );
+
+    if (!certificate) {
+      return res.status(404).json({
+        status: 'failed',
+        message: 'Certificate not found',
+      });
+    }
 
     const trx = await contractInstance.methods
       .issue(
-        cId,
-        candidateName,
-        certificateName,
-        course,
-        grade,
-        institutionDetail.institutionName
+        certificate.certificateUniqueId,
+        certificate.cId,
+        certificate.candidateName,
+        certificate.certificateName,
+        certificate.course,
+        certificate.grade,
+        certificate.institutionDetails.institutionName
       )
       .send({ from: deployerAddress, gasLimit: 927000 });
 
@@ -65,35 +112,26 @@ const createCertificate = async (req, res) => {
       });
     }
 
-    const certificate = await Certificate.create({
-      cId,
-      candidateName,
-      institutionDetails,
-      course,
-      grade,
-      certificateName,
-      issuedBy,
-      transactionDetails: {
-        transactionHash: trx.transactionHash,
-        blockNumber: trx.blockNumber.toString(),
+    await Certificate.findOneAndUpdate(
+      { cId: cId },
+      {
+        status: 'verified',
+        transactionDetails: {
+          transactionHash: trx.transactionHash,
+          blockNumber: trx.blockNumber.toString(),
+        },
       },
-    });
+      { new: true }
+    );
 
-
-    return res.status(201).json({
+    return res.status(200).json({
       status: 'success',
-      message: 'Certificate created succesfully',
-      certificateData: {
-        id: certificate._id,
-      },
-      transactionHash: trx.transactionHash,
+      message: 'Certificate verified successfully',
     });
   } catch (error) {
-    console.log(error);
-
     return res.status(400).json({
       status: 'error',
-      message: 'Something went wrong while creating certificate',
+      message: 'Something went wrong while verifying certificate',
     });
   }
 };
@@ -115,7 +153,24 @@ const getAllCertificates = async (req, res) => {
   }
 };
 
-// Get certificate by each user function need to add
+const getMyCertificates = async (req, res) => {
+  try {
+    const { _id } = req.user;
+    const certificates = await Certificate.find({ issuedBy: _id }).populate(
+      'institutionDetails'
+    );
+    return res.status(200).json({
+      status: 'success',
+      message: 'Certificates fetched successfully',
+      certificates,
+    });
+  } catch (error) {
+    return res.status(400).json({
+      status: 'error',
+      message: 'Something went wrong while fetching my certificates',
+    });
+  }
+};
 
 const getSingleCertificate = async (req, res) => {
   try {
@@ -124,14 +179,14 @@ const getSingleCertificate = async (req, res) => {
       'institutionDetails'
     );
 
-    const blockchainCall = await contractInstance.methods.getCertificate(cId).call();
-
+    // const blockchainCall = await contractInstance.methods
+    //   .getCertificate(certificate?.certificateUniqueId)
+    //   .call();
 
     return res.status(200).json({
       status: 'success',
       message: 'Certificate fetched successfully',
       certificate,
-      blockchainCall
     });
   } catch (error) {
     return res.status(400).json({
@@ -194,8 +249,10 @@ const deleteCertificate = async (req, res) => {
 
 export const certificateController = {
   createCertificate,
+  verifyCertificate,
   getAllCertificates,
   getSingleCertificate,
   updateCertificate,
   deleteCertificate,
+  getMyCertificates,
 };
