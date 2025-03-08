@@ -18,6 +18,8 @@ contract Certificate {
         string certificateName;
         string course;
         string grade;
+        string institutionName;
+        address issuedBy;
     }
 
     mapping(uint256 => Cert) public Certificates;
@@ -27,13 +29,16 @@ contract Certificate {
         string memory _candidateName,
         string memory _certificateName,
         string memory _course,
-        string memory _grade
+        string memory _grade,
+        string memory _institutionName
     ) public onlyAdmin {
         Certificates[_id] = Cert(
             _candidateName,
             _certificateName,
             _course,
-            _grade
+            _grade,
+            _institutionName,
+            msg.sender
         );
     }
 
@@ -44,7 +49,9 @@ contract Certificate {
             string memory candidateName,
             string memory certificateName,
             string memory course,
-            string memory grade
+            string memory grade,
+            string memory institutionName,
+            address issuedBy
         )
     {
         Cert memory cert = Certificates[_id];
@@ -53,7 +60,9 @@ contract Certificate {
             cert.candidateName,
             cert.certificateName,
             cert.course,
-            cert.grade
+            cert.grade,
+            cert.institutionName,
+            cert.issuedBy
         );
     }
 }

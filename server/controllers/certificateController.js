@@ -1,4 +1,8 @@
-import { Certificate } from '../models/index.js';
+import {
+  contractInstance,
+  deployerAddress,
+} from '../blockchain-services/instance.js';
+import { Certificate, Institution } from '../models/index.js';
 
 const createCertificate = async (req, res) => {
   try {
@@ -38,6 +42,29 @@ const createCertificate = async (req, res) => {
       });
     }
 
+    const institutionDetail = await Institution.findOne({
+      _id: institutionDetails,
+    });
+
+    const trx = await contractInstance.methods
+      .issue(
+        cId,
+        candidateName,
+        certificateName,
+        course,
+        grade,
+        institutionDetail.institutionName
+      )
+      .send({ from: deployerAddress, gasLimit: 927000 });
+
+    if (!trx) {
+      return res.status(400).json({
+        status: 'error',
+        message:
+          'Something went wrong while creating certificate in blockchain',
+      });
+    }
+
     const certificate = await Certificate.create({
       cId,
       candidateName,
@@ -46,7 +73,12 @@ const createCertificate = async (req, res) => {
       grade,
       certificateName,
       issuedBy,
+      transactionDetails: {
+        transactionHash: trx.transactionHash,
+        blockNumber: trx.blockNumber.toString(),
+      },
     });
+
 
     return res.status(201).json({
       status: 'success',
@@ -54,8 +86,11 @@ const createCertificate = async (req, res) => {
       certificateData: {
         id: certificate._id,
       },
+      transactionHash: trx.transactionHash,
     });
   } catch (error) {
+    console.log(error);
+
     return res.status(400).json({
       status: 'error',
       message: 'Something went wrong while creating certificate',
@@ -89,10 +124,14 @@ const getSingleCertificate = async (req, res) => {
       'institutionDetails'
     );
 
+    const blockchainCall = await contractInstance.methods.getCertificate(cId).call();
+
+
     return res.status(200).json({
       status: 'success',
       message: 'Certificate fetched successfully',
       certificate,
+      blockchainCall
     });
   } catch (error) {
     return res.status(400).json({

@@ -43,6 +43,11 @@ const certificateSchema = new mongoose.Schema(
         // required: [true, 'Transaction hash is required'],
       },
     },
+    status: {
+      type: String,
+      enum: ['pending', 'verified', 'revoked'],
+      default: 'pending', // Default status before blockchain confirmation
+    },
   },
   { timestamps: true }
 );
