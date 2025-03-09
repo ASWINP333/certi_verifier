@@ -1,8 +1,6 @@
-import { Button, chakra, Flex, Heading } from '@chakra-ui/react';
+import { Button, chakra, Flex, Heading, useToast } from '@chakra-ui/react';
 import { FormInput, SelectInput } from '../../components';
 import { useEffect, useState } from 'react';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../config/axiosInstance';
 
@@ -18,6 +16,7 @@ const CreateUser = () => {
   const [institutionDetails, setInstitutionDetails] = useState('');
 
   const navigate = useNavigate();
+  const toast = useToast();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -36,13 +35,27 @@ const CreateUser = () => {
       const response = await axiosInstance.post(`user/create`, userData);
 
       if (response.status === 201) {
-        toast.success(response?.data?.message || 'User Created successfully');
+        toast({
+          title: 'success',
+          description: response?.data?.message || 'User Created successfully',
+          status: 'success',
+          position: 'top',
+          duration: 1500,
+          isClosable: true,
+        });
         setBtnLoading(false);
         navigate('/user/users');
       }
     } catch (error) {
       setBtnLoading(false);
-      toast.error(error?.response?.data?.message || 'Failed to create user');
+      toast({
+        title: 'error',
+        description: error?.response?.data?.message || 'Failed to create user',
+        status: 'error',
+        position: 'top',
+        duration: 1500,
+        isClosable: true,
+      });
     }
   };
 
@@ -190,7 +203,6 @@ const CreateUser = () => {
           </Flex>
         </Flex>
       </Flex>
-      <ToastContainer position='top-center' theme='dark' autoClose={2000} />
     </Flex>
   );
 };

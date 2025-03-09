@@ -1,23 +1,17 @@
-import { Button, chakra, Flex, Text } from '@chakra-ui/react';
+import { Button, chakra, Flex, Text, useToast } from '@chakra-ui/react';
 import { FormInput } from '../../components';
-import axios from 'axios';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
+import axiosInstance from '../../config/axiosInstance';
 
-const UpdateUser = ({ onClose, Idata }) => {
+const UpdateUser = ({ onClose, data }) => {
   const [btnLoading, setBtnLoading] = useState(false);
-  const [institutionName, setInstitutionName] = useState(
-    Idata?.institutionName || ''
-  );
-  const [address, setAddress] = useState(Idata?.address || '');
+  const [firstName, setFirstName] = useState(data?.firstName || '');
+  const [lastName, setLastName] = useState(data?.lastName || '');
+  const [phoneNumber, setPhoneNumber] = useState(data?.phoneNumber || '');
+  const [designation, setDesignation] = useState(data?.designation || '');
 
-  // Ensure state updates if Idata changes dynamically
-  useEffect(() => {
-    setInstitutionName(Idata?.institutionName || '');
-    setAddress(Idata?.address || '');
-  }, [Idata]);
+  const toast = useToast();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -25,29 +19,39 @@ const UpdateUser = ({ onClose, Idata }) => {
       setBtnLoading(true);
 
       const updatedData = {
-        institutionName: institutionName || Idata?.institutionName,
-        address: address || Idata?.address,
+        firstName: firstName || data?.firstName,
+        lastName: lastName || data?.lastName,
+        phoneNumber: phoneNumber || data?.phoneNumber,
+        designation: designation || data?.designation,
       };
 
-      const response = await axios.put(
-        `http://localhost:4000/api/v1/institution/update/${Idata?.iId}`,
+      const response = await axiosInstance.put(
+        `user/update/${data?._id}`,
         updatedData
       );
 
       if (response.status === 200) {
-        toast.success(
-          response?.data?.message || 'Institution updated successfully'
-        );
+        toast({
+          title: 'success',
+          description: response?.data?.message || 'User updated successfully',
+          status: 'success',
+          position: 'top',
+          duration: 1500,
+          isClosable: true,
+        });
         setBtnLoading(false);
-        setTimeout(() => {
-          onClose();
-        }, 1500);
+        onClose();
       }
     } catch (error) {
       setBtnLoading(false);
-      toast.error(
-        error?.response?.data?.message || 'Failed to update institution'
-      );
+      toast({
+        title: 'error',
+        description: error?.response?.data?.message || 'Failed to update user',
+        status: 'error',
+        position: 'top',
+        duration: 1500,
+        isClosable: true,
+      });
     }
   };
 
@@ -62,7 +66,7 @@ const UpdateUser = ({ onClose, Idata }) => {
       p='5'
     >
       <Text color='brand.mainTeal' fontSize='1.5rem' fontWeight='semibold'>
-        Update Institution
+        Update User
       </Text>
       <Flex
         as={chakra.form}
@@ -72,20 +76,40 @@ const UpdateUser = ({ onClose, Idata }) => {
         onSubmit={handleSubmit}
       >
         <FormInput
-          label='Institution Name'
-          id='institutionName'
+          label='First Name'
+          id='firstName'
           type='text'
           isRequired={true}
-          value={institutionName}
-          onChange={(e) => setInstitutionName(e.target.value)}
+          value={firstName}
+          onChange={(e) => setFirstName(e.target.value)}
+          labelColor='brand.white'
         />
         <FormInput
-          label='Address'
-          id='address'
+          label='Last Name'
+          id='lastName'
           type='text'
           isRequired={true}
-          value={address}
-          onChange={(e) => setAddress(e.target.value)}
+          value={lastName}
+          onChange={(e) => setLastName(e.target.value)}
+          labelColor='brand.white'
+        />
+        <FormInput
+          label='Phone Number'
+          id='phoneNumber'
+          type='text'
+          isRequired={true}
+          value={phoneNumber}
+          onChange={(e) => setPhoneNumber(e.target.value)}
+          labelColor='brand.white'
+        />
+        <FormInput
+          label='Designation'
+          id='designation'
+          type='text'
+          isRequired={true}
+          value={designation}
+          onChange={(e) => setDesignation(e.target.value)}
+          labelColor='brand.white'
         />
         <Flex w='full' justify='space-between'>
           <Button
@@ -120,13 +144,12 @@ const UpdateUser = ({ onClose, Idata }) => {
           </Button>
         </Flex>
       </Flex>
-      <ToastContainer position='top-center' theme='dark' autoClose={2000} />
     </Flex>
   );
 };
 
 UpdateUser.propTypes = {
-  Idata: PropTypes.object,
+  data: PropTypes.object,
   onClose: PropTypes.func.isRequired,
 };
 export default UpdateUser;

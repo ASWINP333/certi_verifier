@@ -33,10 +33,8 @@ const UsersList = () => {
       setLoading(true);
       const response = await axiosInstance.get(`user/all`);
       if (response.data.status === 'success') {
-        console.log(response.data.data);
-
         setLoading(false);
-        setUserData(response.data.data);
+        setUserData(response?.data?.data);
       }
     } catch (error) {
       setLoading(false);
@@ -84,7 +82,7 @@ const UsersList = () => {
               fontSize='1.2rem'
               _hover={{ bg: 'transparent' }}
               onClick={() => {
-                setDeleteId(cell?.iId);
+                setDeleteId(cell?._id);
                 onOpen();
               }}
             >
@@ -146,7 +144,7 @@ const UsersList = () => {
         onClose={onModalClose}
         bgColor='brand.dashboardBg'
       >
-        <UpdateUser onClose={onModalClose} Idata={selectedUser} />
+        <UpdateUser onClose={onModalClose} data={selectedUser} />
       </MainModal>
     </Flex>
   );

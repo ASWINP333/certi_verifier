@@ -1,8 +1,56 @@
-import { Button, chakra, Flex, Text } from '@chakra-ui/react';
+import { Button, chakra, Flex, Text, useToast } from '@chakra-ui/react';
 import { FormInput } from '../../components';
 import PropTypes from 'prop-types';
+import { useState } from 'react';
+import axiosInstance from '../../config/axiosInstance';
 
 const UpdateProfile = ({ onClose, data }) => {
+  const [firstName, setFirstName] = useState(data?.firstName || '');
+  const [lastName, setLastName] = useState(data?.lastName || '');
+  const [phoneNumber, setPhoneNumber] = useState(data?.phoneNumber || '');
+  const [loading, setloading] = useState(false);
+
+  const toast = useToast();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      setloading(true);
+
+      const userData = {
+        firstName,
+        lastName,
+        phoneNumber,
+      };
+
+      const response = await axiosInstance.put(`user/update/me`, userData);
+
+      if (response.status === 200) {
+        toast({
+          title: 'success',
+          description: response?.data?.message || 'Profile successfully',
+          status: 'success',
+          position: 'top',
+          duration: 1500,
+          isClosable: true,
+        });
+        setloading(false);
+        onClose();
+      }
+    } catch (error) {
+      setloading(false);
+      toast({
+        title: 'error',
+        description:
+          error?.response?.data?.message || 'Failed to update profile',
+        status: 'error',
+        position: 'top',
+        duration: 1500,
+        isClosable: true,
+      });
+    }
+  };
+
   return (
     <Flex
       height='100%'
@@ -16,7 +64,13 @@ const UpdateProfile = ({ onClose, data }) => {
       <Text color='brand.mainTeal' fontSize='1.5rem' fontWeight='semibold'>
         Update Profile
       </Text>
-      <Flex as={chakra.form} w='100%' direction='column' gap='6'>
+      <Flex
+        as={chakra.form}
+        w='100%'
+        direction='column'
+        gap='6'
+        onSubmit={handleSubmit}
+      >
         <FormInput
           label='Email'
           id='email'
@@ -25,7 +79,6 @@ const UpdateProfile = ({ onClose, data }) => {
           labelColor='brand.white'
           isDisabled
           value={data?.email}
-          //   onChange={(e) => setInstitutionName(e.target.value)}
         />
         <FormInput
           label='First Name'
@@ -33,8 +86,8 @@ const UpdateProfile = ({ onClose, data }) => {
           type='text'
           isRequired={true}
           labelColor='brand.white'
-          value={data?.firstName}
-          //   onChange={(e) => setAddress(e.target.value)}
+          value={firstName}
+          onChange={(e) => setFirstName(e.target.value)}
         />
         <FormInput
           label='Last Name'
@@ -42,8 +95,8 @@ const UpdateProfile = ({ onClose, data }) => {
           type='text'
           isRequired={true}
           labelColor='brand.white'
-          value={data?.lastName}
-          //   onChange={(e) => setAddress(e.target.value)}
+          value={lastName}
+          onChange={(e) => setLastName(e.target.value)}
         />
         <FormInput
           label='Phone Number'
@@ -51,8 +104,8 @@ const UpdateProfile = ({ onClose, data }) => {
           type='text'
           isRequired={true}
           labelColor='brand.white'
-          value={data?.phoneNumber}
-          //   onChange={(e) => setAddress(e.target.value)}
+          value={phoneNumber}
+          onChange={(e) => setPhoneNumber(e.target.value)}
         />
         <FormInput
           label='Designation'
@@ -61,7 +114,7 @@ const UpdateProfile = ({ onClose, data }) => {
           isRequired={true}
           labelColor='brand.white'
           value={data?.designation}
-          //   onChange={(e) => setAddress(e.target.value)}
+          isDisabled
         />
         <Flex w='full' justify='space-between'>
           <Button
@@ -88,7 +141,7 @@ const UpdateProfile = ({ onClose, data }) => {
             _hover={{ bg: 'green.400' }}
             borderRadius='0.7rem'
             size='sm'
-            // isLoading={btnLoading}
+            isLoading={loading}
             loadingText='Updating'
             spinnerPlacement='start'
           >

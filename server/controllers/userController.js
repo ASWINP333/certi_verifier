@@ -234,7 +234,7 @@ const getMyUsers = async (req, res) => {
 // Delete user
 const deleteUser = async (req, res) => {
   try {
-    const { id } = req.query;
+    const { id } = req.params;
 
     const user = await User.findByIdAndDelete({ _id: id });
     if (!user) {
@@ -387,6 +387,68 @@ const resetPassword = async (req, res) => {
   }
 };
 
+const updateMe = async (req, res) => {
+  try {
+    const userId = req.user._id;
+
+    const user = await User.findOne({ _id: userId });
+    if (!user) {
+      return res.status(404).json({
+        status: 'failed',
+        message: 'user not found',
+      });
+    }
+    await User.findOneAndUpdate({ _id: userId }, req.body, { new: true });
+    return res.status(200).json({
+      status: 'success',
+      message: 'User Profile updated successfully',
+    });
+  } catch (error) {
+    console.log(error.message);
+
+    return res.status(400).json({
+      status: 'error',
+      message: 'Something went wrong while updating profile',
+    });
+  }
+};
+
+const updateUserDetails = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { firstName, lastName, phoneNumber, designation } = req.body;
+
+    console.log(userId);
+
+    // Find and update the user
+    const updatedUser = await User.findByIdAndUpdate(
+      { _id: userId },
+      { firstName, lastName, phoneNumber, designation },
+      { new: true, runValidators: true }
+    );
+
+    // If user is not found
+    if (!updatedUser) {
+      return res.status(404).json({
+        status: 'failed',
+        message: 'User not found',
+      });
+    }
+
+    return res.status(200).json({
+      status: 'success',
+      message: 'User details updated successfully',
+      user: updatedUser,
+    });
+  } catch (error) {
+    console.error('Error updating user:', error.message);
+    res.status(500).json({
+      status: 'error',
+      message: 'Something went wrong while updating user details',
+    });
+  }
+};
+
 export const userController = {
   register,
   login,
@@ -397,4 +459,6 @@ export const userController = {
   forgotPassword,
   verifyOtp,
   resetPassword,
+  updateMe,
+  updateUserDetails,
 };

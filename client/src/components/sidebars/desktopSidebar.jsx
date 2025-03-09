@@ -1,15 +1,22 @@
-import { Divider, Flex, Image, Text } from '@chakra-ui/react';
+import { Divider, Flex, Image, Text, useDisclosure } from '@chakra-ui/react';
 import { SLogo } from '../../assets';
 import { FaRegUser } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { MdOutlineLogout } from 'react-icons/md';
 import { getItemFromLocalStorage } from '../../functions/localStorage';
+import MainModal from '../modals/MainModal';
+import Logout from './logout';
 
 const DesktopSidebar = () => {
   const user = getItemFromLocalStorage('user');
+  const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <Flex w='16rem' h='100vh' bg='brand.sidebarMainBg'>
-      <Flex direction='column' alignItems='center' gap='10'>
+      <Flex
+        direction='column'
+        alignItems='center'
+        justifyContent='space-between'
+      >
         <Link to='/user/dashboard'>
           <Image src={SLogo} alt='Secondary Logo' />
         </Link>
@@ -67,10 +74,19 @@ const DesktopSidebar = () => {
             <Divider w='12rem' borderColor='brand.mainTeal' />
           </Flex>
         </Flex>
-        <Flex color='brand.mainTeal' alignItems='center' mt='32'>
+        <Flex
+          color='brand.mainTeal'
+          alignItems='center'
+          cursor='pointer'
+          onClick={onOpen}
+          mb='4'
+        >
           <MdOutlineLogout size='2rem' />
         </Flex>
       </Flex>
+      <MainModal isOpen={isOpen} onClose={onClose}>
+        <Logout onClose={onClose} />
+      </MainModal>
     </Flex>
   );
 };

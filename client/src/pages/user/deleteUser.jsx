@@ -1,33 +1,40 @@
-import { Button, Flex, Text } from '@chakra-ui/react';
-import axios from 'axios';
+import { Button, Flex, Text, useToast } from '@chakra-ui/react';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import axiosInstance from '../../config/axiosInstance';
 
 const DeleteUser = ({ onClose, id }) => {
   const [loading, setLoading] = useState(false);
+  const toast = useToast();
 
   const handleDelete = async () => {
     try {
       setLoading(true);
-      const response = await axios.delete(
-        `http://localhost:4000/api/v1/institution/delete/${id}`
-      );
+      const response = await axiosInstance.delete(`user/delete/${id}`);
 
       if (response.status === 200) {
-        toast.success(
-          response?.data?.message || 'Institution deleted successfully'
-        );
+        toast({
+          title: 'success',
+          description: response?.data?.message || 'User Deleted successfully',
+          status: 'success',
+          position: 'top',
+          duration: 1500,
+          isClosable: true,
+        });
+
         setLoading(false);
-        setTimeout(() => {
-          onClose();
-        }, 1500);
+
+        onClose();
       }
     } catch (error) {
-      toast.error(
-        error?.response?.data?.message || 'Failed to delete institution'
-      );
+      toast({
+        title: 'error',
+        description: error?.response?.data?.message || 'Failed to delete User',
+        status: 'error',
+        position: 'top',
+        duration: 1500,
+        isClosable: true,
+      });
       setLoading(false);
     }
   };
@@ -77,13 +84,12 @@ const DeleteUser = ({ onClose, id }) => {
           Confirm
         </Button>
       </Flex>
-      <ToastContainer position='top-center' theme='dark' autoClose={2000} />
     </Flex>
   );
 };
 
 DeleteUser.propTypes = {
-  id: PropTypes.any.isRequired,
+  id: PropTypes.any,
   onClose: PropTypes.func.isRequired,
 };
 
