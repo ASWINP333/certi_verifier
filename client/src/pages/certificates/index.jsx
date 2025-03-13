@@ -139,13 +139,7 @@ const CertificateList = () => {
                 setSelectedUser(cell);
                 onModalOpen();
               }}
-              isDisabled={
-                cell?.status === 'verified'
-                  ? true
-                  : cell?.status === 'revoked'
-                    ? true
-                    : false
-              }
+              isDisabled={cell?.status === 'verified' ? true : false}
             >
               <MdEdit />
             </Button>
@@ -158,13 +152,7 @@ const CertificateList = () => {
                 setDeleteId(cell?._id);
                 onOpen();
               }}
-              isDisabled={
-                cell?.status === 'verified'
-                  ? true
-                  : cell?.status === 'revoked'
-                    ? true
-                    : false
-              }
+              isDisabled={cell?.status === 'verified' ? true : false}
             >
               <MdDelete />
             </Button>

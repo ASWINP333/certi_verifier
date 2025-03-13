@@ -50,7 +50,7 @@ const CertificateDetails = ({ data, onClose, loading }) => {
     e.preventDefault();
     try {
       setRevokingLoading(true);
-      const response = await axiosInstance.post(
+      const response = await axiosInstance.delete(
         `certificate/revoke/${data?.cId}`
       );
 
@@ -163,7 +163,7 @@ const CertificateDetails = ({ data, onClose, loading }) => {
                   bg='green.300'
                   color='brand.white'
                   alignItems='center'
-                  w='5rem'
+                  minW='5rem'
                   justify='center'
                   px='2'
                   py='1'
@@ -179,7 +179,7 @@ const CertificateDetails = ({ data, onClose, loading }) => {
                   bg='red.400'
                   color='brand.white'
                   alignItems='center'
-                  w='5rem'
+                  minW='5rem'
                   justify='center'
                   px='2'
                   py='1'
@@ -187,6 +187,13 @@ const CertificateDetails = ({ data, onClose, loading }) => {
                   onClick={handleCertificateRevoke}
                   isLoading={revokeLoading}
                   loadingText='Loading..'
+                  isDisabled={
+                    data?.status === 'revoked'
+                      ? true
+                      : data?.status === 'verified'
+                        ? true
+                        : false
+                  }
                 >
                   Reject
                 </Button>
