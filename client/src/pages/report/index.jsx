@@ -166,7 +166,7 @@ const Report = () => {
               />
             </Flex>
           ) : (
-            <Flex mt='8'>
+            <Flex mt='8' direction='column'>
               <Flex
                 as={chakra.form}
                 pos='absolute'
@@ -209,20 +209,6 @@ const Report = () => {
                   >
                     Submit
                   </Button>
-                  <Button
-                    w='6rem'
-                    px={{ base: '4', md: '6' }}
-                    bg='brand.mainTeal'
-                    color='brand.white'
-                    type='button'
-                    _hover={{ bg: 'green.400' }}
-                    borderRadius='0.7rem'
-                    size='sm'
-                    mt='10'
-                    onClick={downloadExcel}
-                  >
-                    Download
-                  </Button>
                 </Flex>
               </Flex>
               {certificateData.length !== 0 ? (
@@ -243,6 +229,23 @@ const Report = () => {
                   No Data found in the selected date
                 </Flex>
               )}
+              <Flex pos='absolute' bottom='40'>
+                <Button
+                  px={{ base: '4', md: '6' }}
+                  border='2px solid'
+                  bg='transparent'
+                  borderColor='brand.mainTeal'
+                  color='brand.white'
+                  type='button'
+                  _hover={{ borderColor: 'green.400' }}
+                  borderRadius='0.6rem'
+                  size='sm'
+                  mt='10'
+                  onClick={downloadExcel}
+                >
+                  Download as Exel
+                </Button>
+              </Flex>
             </Flex>
           )}
         </Flex>
