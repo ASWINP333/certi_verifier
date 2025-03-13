@@ -6,14 +6,7 @@ import { Certificate, Institution } from '../models/index.js';
 
 const createCertificate = async (req, res) => {
   try {
-    const {
-      cId,
-      candidateName,
-      institutionDetails,
-      course,
-      grade,
-      certificateName,
-    } = req.body;
+    const { cId, candidateName, course, grade, certificateName } = req.body;
 
     const { _id } = req.user;
 
@@ -27,14 +20,7 @@ const createCertificate = async (req, res) => {
 
     const certificateUniqueId = cId + institutionDetail?.iId;
 
-    if (
-      !cId ||
-      !candidateName ||
-      !institutionDetails ||
-      !course ||
-      !grade ||
-      !certificateName
-    ) {
+    if (!cId || !candidateName || !course || !grade || !certificateName) {
       return res.status(404).json({
         status: 'failed',
         message: 'Please add all fields',
@@ -54,7 +40,7 @@ const createCertificate = async (req, res) => {
       cId,
       certificateUniqueId,
       candidateName,
-      institutionDetails,
+      institutionDetails: institutionid,
       course,
       grade,
       certificateName,
@@ -136,6 +122,38 @@ const verifyCertificate = async (req, res) => {
   }
 };
 
+const revokeCertificate = async (req, res) => {
+  try {
+    const { cId } = req.params;
+    const certificate = await Certificate.findOne({ cId: cId });
+
+    if (!certificate) {
+      return res.status(404).json({
+        status: 'failed',
+        message: 'Certificate not found',
+      });
+    }
+
+    await Certificate.findOneAndUpdate(
+      { cId: cId },
+      {
+        status: 'revoked',
+      },
+      { new: true }
+    );
+
+    return res.status(200).json({
+      status: 'success',
+      message: 'Certificate rovoked successfully',
+    });
+  } catch (error) {
+    return res.status(400).json({
+      status: 'error',
+      message: 'Something went wrong while revoking certificate',
+    });
+  }
+};
+
 const getAllCertificates = async (req, res) => {
   try {
     const certificates =
@@ -156,9 +174,9 @@ const getAllCertificates = async (req, res) => {
 const getMyCertificates = async (req, res) => {
   try {
     const { _id } = req.user;
-    const certificates = await Certificate.find({ issuedBy: _id }).populate(
-      'institutionDetails'
-    );
+    const certificates = await Certificate.find({ issuedBy: _id })
+      .populate('institutionDetails')
+      .populate('issuedBy');
     return res.status(200).json({
       status: 'success',
       message: 'Certificates fetched successfully',
@@ -174,10 +192,10 @@ const getMyCertificates = async (req, res) => {
 
 const getSingleCertificate = async (req, res) => {
   try {
-    const { cId } = req.params;
-    const certificate = await Certificate.findOne({ cId: cId }).populate(
-      'institutionDetails'
-    );
+    const { id } = req.params;
+    const certificate = await Certificate.findOne({ _id: id })
+      .populate('institutionDetails')
+      .populate('issuedBy');
 
     // const blockchainCall = await contractInstance.methods
     //   .getCertificate(certificate?.certificateUniqueId)
@@ -226,15 +244,15 @@ const updateCertificate = async (req, res) => {
 
 const deleteCertificate = async (req, res) => {
   try {
-    const { cId } = req.params;
-    const certificate = await Certificate.findOne({ cId: cId });
+    const { id } = req.params;
+    const certificate = await Certificate.findOne({ _id: id });
     if (!certificate) {
       return res.status(404).json({
         status: 'failed',
         message: 'Certificate not found',
       });
     }
-    await Certificate.findOneAndDelete({ cId: cId });
+    await Certificate.findByIdAndDelete({ _id: id });
     return res.status(200).json({
       status: 'success',
       message: 'Certificate deleted successfully',
@@ -255,4 +273,5 @@ export const certificateController = {
   updateCertificate,
   deleteCertificate,
   getMyCertificates,
+  revokeCertificate,
 };

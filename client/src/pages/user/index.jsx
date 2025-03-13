@@ -3,7 +3,6 @@ import {
   Flex,
   Heading,
   Spinner,
-  Text,
   useDisclosure,
 } from '@chakra-ui/react';
 import { MainModal, TableComponent } from '../../components';
@@ -31,7 +30,7 @@ const UsersList = () => {
   const getUsersData = async () => {
     try {
       setLoading(true);
-      const response = await axiosInstance.get(`user/all`);
+      const response = await axiosInstance.get(`user/myUsers`);
       if (response.data.status === 'success') {
         setLoading(false);
         setUserData(response?.data?.data);
@@ -119,20 +118,14 @@ const UsersList = () => {
               />
             </Flex>
           ) : (
-            <>
-              {userData.length !== 0 ? (
-                <TableComponent
-                  columns={columns}
-                  data={userData}
-                  buttonName='Add User'
-                  buttonLink='/user/users/create'
-                  isButton={true}
-                  isPagination={true}
-                />
-              ) : (
-                <Text>No Data available</Text>
-              )}
-            </>
+            <TableComponent
+              columns={columns}
+              data={userData}
+              buttonName='Add User'
+              buttonLink='/user/users/create'
+              isButton={true}
+              isPagination={true}
+            />
           )}
         </Flex>
       </Flex>

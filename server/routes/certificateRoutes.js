@@ -14,6 +14,10 @@ certificateRoutes
   .post(authenticate.user, certificateController.verifyCertificate);
 
 certificateRoutes
+  .route('/revoke/:cId')
+  .delete(authenticate.user, certificateController.revokeCertificate);
+
+certificateRoutes
   .route('/getAll')
   .get(authenticate.user, certificateController.getAllCertificates);
 
@@ -22,7 +26,7 @@ certificateRoutes
   .get(authenticate.user, certificateController.getMyCertificates);
 
 certificateRoutes
-  .route('/get/:cId')
+  .route('/get/:id')
   .get(authenticate.user, certificateController.getSingleCertificate);
 
 certificateRoutes
@@ -30,7 +34,7 @@ certificateRoutes
   .put(authenticate.user, certificateController.updateCertificate);
 
 certificateRoutes
-  .route('/delete/:cId')
+  .route('/delete/:id')
   .delete(authenticate.user, certificateController.deleteCertificate);
 
 export default certificateRoutes;

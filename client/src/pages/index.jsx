@@ -8,6 +8,7 @@ import UsersList from './user';
 import CreateUser from './user/createUser';
 import Settings from './settings';
 import CertificateList from './certificates';
+import CreateCertificate from './certificates/createCertificate';
 
 export {
   Login,
@@ -20,4 +21,5 @@ export {
   CreateUser,
   Settings,
   CertificateList,
+  CreateCertificate,
 };

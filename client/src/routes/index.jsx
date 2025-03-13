@@ -2,6 +2,7 @@ import { RequireAuth } from '../contexts/authContext';
 import { AuthenticationLayout, DesktopLayout } from '../layouts';
 import {
   CertificateList,
+  CreateCertificate,
   CreateInstition,
   CreateUser,
   Dashboard,
@@ -40,6 +41,7 @@ const routes = [
       { path: 'users', element: <UsersList /> },
       { path: 'users/create', element: <CreateUser /> },
       { path: 'certificates', element: <CertificateList /> },
+      { path: 'certificates/create', element: <CreateCertificate /> },
       { path: 'settings', element: <Settings /> },
     ],
   },
