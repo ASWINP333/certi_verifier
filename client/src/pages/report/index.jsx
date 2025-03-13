@@ -9,6 +9,7 @@ import {
 import { DateInput, SimpleTableComponent } from '../../components';
 import { useEffect, useMemo, useState } from 'react';
 import axiosInstance from '../../config/axiosInstance';
+import * as XLSX from 'xlsx';
 
 const Report = () => {
   const [certificateData, setCertificateData] = useState([]);
@@ -38,7 +39,7 @@ const Report = () => {
     setStartDate(startDate);
     setEndDate(endDate);
     getUsersData(startDate, endDate);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const getUsersData = async (start, end) => {
@@ -61,7 +62,7 @@ const Report = () => {
           status: 'warning',
           duration: 3000,
           isClosable: true,
-          position:'top'
+          position: 'top',
         });
         setCertificateData([]); // Explicitly set an empty array to trigger re-render
       }
@@ -73,7 +74,7 @@ const Report = () => {
         status: 'error',
         duration: 3000,
         isClosable: true,
-        position:'top'
+        position: 'top',
       });
       setCertificateData([]); // Clear data on error as well
     } finally {
@@ -94,7 +95,7 @@ const Report = () => {
         status: 'warning',
         duration: 3000,
         isClosable: true,
-        position:'top'
+        position: 'top',
       });
     }
   };
@@ -120,6 +121,25 @@ const Report = () => {
     ],
     []
   );
+
+  const downloadExcel = () => {
+    if (certificateData.length === 0) {
+      toast({
+        title: 'No Data',
+        description: 'There is no data to download.',
+        status: 'warning',
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }
+
+    const worksheet = XLSX.utils.json_to_sheet(certificateData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Certificates');
+
+    XLSX.writeFile(workbook, 'Certificates_Report.xlsx');
+  };
 
   return (
     <Flex w='100%' h='100vh'>
@@ -153,6 +173,7 @@ const Report = () => {
                 onSubmit={handleSubmit}
                 right='10'
                 top='32'
+                gap='4'
               >
                 <DateInput
                   label='Start Date'
@@ -172,21 +193,37 @@ const Report = () => {
                   labelColor='brand.white'
                   onChange={(e) => setEndDate(e.target.value)}
                 />
-                <Button
-                  w='15rem'
-                  px={{ base: '4', md: '6' }}
-                  bg='brand.mainTeal'
-                  color='brand.white'
-                  type='submit'
-                  _hover={{ bg: 'green.400' }}
-                  borderRadius='0.7rem'
-                  size='sm'
-                  mt='10'
-                  isLoading={btnLoading}
-                  loadingText='Loading...'
-                >
-                  Submit
-                </Button>
+                <Flex gap='2'>
+                  <Button
+                    w='10rem'
+                    px={{ base: '4', md: '6' }}
+                    bg='brand.mainTeal'
+                    color='brand.white'
+                    type='submit'
+                    _hover={{ bg: 'green.400' }}
+                    borderRadius='0.7rem'
+                    size='sm'
+                    mt='10'
+                    isLoading={btnLoading}
+                    loadingText='Loading...'
+                  >
+                    Submit
+                  </Button>
+                  <Button
+                    w='6rem'
+                    px={{ base: '4', md: '6' }}
+                    bg='brand.mainTeal'
+                    color='brand.white'
+                    type='button'
+                    _hover={{ bg: 'green.400' }}
+                    borderRadius='0.7rem'
+                    size='sm'
+                    mt='10'
+                    onClick={downloadExcel}
+                  >
+                    Download
+                  </Button>
+                </Flex>
               </Flex>
               {certificateData.length !== 0 ? (
                 <SimpleTableComponent
