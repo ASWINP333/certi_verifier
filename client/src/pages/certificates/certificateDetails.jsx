@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { GoLink } from 'react-icons/go';
 import axiosInstance from '../../config/axiosInstance';
+import dayjs from 'dayjs';
 
 const CertificateDetails = ({ data, onClose, loading }) => {
   const [verifyLoading, setVerifyLoading] = useState(false);
@@ -138,7 +139,9 @@ const CertificateDetails = ({ data, onClose, loading }) => {
             </Flex>
             <Flex color='brand.white' gap='2' fontSize='1.1rem'>
               <Text>Created At: </Text>
-              <Text>{data?.createdAt}</Text>
+              <Text>
+                {dayjs(data?.createdAt).format('DD MMM YYYY, h:mm A')}
+              </Text>
             </Flex>
 
             <Flex w='100%' alignItems='center' justify='space-between' mt='4'>

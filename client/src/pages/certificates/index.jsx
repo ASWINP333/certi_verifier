@@ -80,6 +80,7 @@ const CertificateList = () => {
             style={{ cursor: 'pointer' }}
             _hover={{ textDecoration: 'underline', color: 'brand.dark' }}
             onClick={() => handleBatchClick(row)}
+            p='0'
           >
             {row?.cId}
           </Button>
