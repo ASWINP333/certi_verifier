@@ -9,6 +9,7 @@ import {
   ForgotPassword,
   InstitutionList,
   Login,
+  Report,
   Settings,
   UsersList,
   VerifyOtp,
@@ -43,6 +44,7 @@ const routes = [
       { path: 'certificates', element: <CertificateList /> },
       { path: 'certificates/create', element: <CreateCertificate /> },
       { path: 'settings', element: <Settings /> },
+      { path: 'report', element: <Report /> },
     ],
   },
 ];

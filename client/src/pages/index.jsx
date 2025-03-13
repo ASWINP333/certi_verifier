@@ -9,6 +9,7 @@ import CreateUser from './user/createUser';
 import Settings from './settings';
 import CertificateList from './certificates';
 import CreateCertificate from './certificates/createCertificate';
+import Report from './report';
 
 export {
   Login,
@@ -22,4 +23,5 @@ export {
   Settings,
   CertificateList,
   CreateCertificate,
+  Report,
 };

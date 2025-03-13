@@ -22,6 +22,10 @@ certificateRoutes
   .get(authenticate.user, certificateController.getAllCertificates);
 
 certificateRoutes
+  .route('/get/date')
+  .get(authenticate.user, certificateController.getCertificatesByDate);
+
+certificateRoutes
   .route('/myCertificates')
   .get(authenticate.user, certificateController.getMyCertificates);
 

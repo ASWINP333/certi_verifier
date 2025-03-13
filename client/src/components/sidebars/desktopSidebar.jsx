@@ -68,6 +68,12 @@ const DesktopSidebar = () => {
             <Divider w='12rem' borderColor='brand.mainTeal' />
           </Flex>
           <Flex direction='column' alignItems='center' gap='4'>
+            <Link to='/user/report'>
+              <Text color='brand.white'>Report</Text>
+            </Link>
+            <Divider w='12rem' borderColor='brand.mainTeal' />
+          </Flex>
+          <Flex direction='column' alignItems='center' gap='4'>
             <Link to='/user/settings'>
               <Text color='brand.white'>Settings</Text>
             </Link>

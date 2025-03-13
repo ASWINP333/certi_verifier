@@ -6,6 +6,8 @@ import TableComponent from './tables/mainTable';
 import MainModal from './modals/MainModal';
 import FormInput from './formComponents/formInput';
 import SelectInput from './formComponents/selectInput';
+import SimpleTableComponent from './tables/simpleTable';
+import DateInput from './formComponents/dateInput';
 
 export {
   LoginInput,
@@ -16,4 +18,6 @@ export {
   MainModal,
   FormInput,
   SelectInput,
+  SimpleTableComponent,
+  DateInput,
 };
