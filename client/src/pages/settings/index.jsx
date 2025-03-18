@@ -39,6 +39,13 @@ const Settings = () => {
           direction='column'
           gap='6'
         >
+          <Flex border='2px solid'
+          direction='column'  
+          justify='space-between'
+          px={{ base: '4', md: '6' }}
+          py={{ base: '4', md: '6' }}
+          borderRadius='0.7rem'
+          borderColor='brand.mainTeal'>
           <Flex w='50rem' h='6rem' justify='space-between'>
             <Flex direction='column' gap='4'>
               <Text
@@ -115,6 +122,7 @@ const Settings = () => {
             </Button>
           </Flex>
         </Flex>
+      </Flex>
       </Flex>
       <MainModal
         isOpen={isModalOpen}

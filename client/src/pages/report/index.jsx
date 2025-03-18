@@ -70,7 +70,7 @@ const Report = () => {
       console.log(error);
       toast({
         title: 'Error',
-        description: 'Failed to fetch certificates. Please try again later.',
+        description: 'no certificate found.',
         status: 'error',
         duration: 3000,
         isClosable: true,
@@ -107,17 +107,36 @@ const Report = () => {
         accessor: 'cId',
       },
       {
+        Header: 'Institution Name',
+        accessor: (row) => row?.institutionDetails?.institutionName || 'N/A',
+      },
+      {
         Header: 'Candidate Name',
         accessor: 'candidateName',
       },
       {
+        Header: 'Course',
+        accessor: 'course',
+      },
+      {
+        Header: 'Grade',
+        accessor: 'grade',
+      },
+      {
         Header: 'Certificate Name',
         accessor: 'certificateName',
+      },                                                                                                          
+      {
+        Header: 'status',
+        accessor: 'status',
       },
       {
         Header: 'Institution Name',
-        accessor: (row) => row?.institutionDetails?.institutionName || 'N/A',
+        accessor: (row) => row?.issuedBy?.firstName || 'N/A',
       },
+      
+      
+     
     ],
     []
   );
