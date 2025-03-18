@@ -5,12 +5,11 @@ import {
   Heading,
   Text,
   Textarea,
+  useToast,
 } from '@chakra-ui/react';
 import { FormInput } from '../../components';
 import { useState } from 'react';
 import axiosInstance from '../../config/axiosInstance';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
 
 const CreateInstition = () => {
@@ -20,6 +19,7 @@ const CreateInstition = () => {
   const [loading, setloading] = useState(false);
 
   const navigate = useNavigate();
+  const toast = useToast();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -38,17 +38,29 @@ const CreateInstition = () => {
       );
 
       if (response.status === 201) {
-        toast.success(
-          response?.data?.message || 'Institution Created successfully'
-        );
+        toast({
+          title: 'success',
+          description:
+            response?.data?.message || 'Institution Created successfully',
+          status: 'success',
+          position: 'top',
+          duration: 1500,
+          isClosable: true,
+        });
         setloading(false);
         navigate('/user/institutions');
       }
     } catch (error) {
       setloading(false);
-      toast.error(
-        error?.response?.data?.message || 'Failed to create institution'
-      );
+      toast({
+        title: 'error',
+        description:
+          error?.response?.data?.message || 'Failed to create institution',
+        status: 'error',
+        duration: 2000,
+        isClosable: true,
+        position: 'top',
+      });
     }
   };
 
@@ -140,7 +152,6 @@ const CreateInstition = () => {
           </Flex>
         </Flex>
       </Flex>
-      <ToastContainer position='top-center' theme='dark' autoClose={2000} />
     </Flex>
   );
 };

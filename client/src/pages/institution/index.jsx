@@ -7,14 +7,16 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 import { MainModal, TableComponent } from '../../components';
-import axiosInstance from '../../config/axiosInstance';
 import { MdDelete, MdEdit } from 'react-icons/md';
 import DeleteInstituion from './deleteInstituion';
 import UpdateInstitution from './updateInstitution';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { getAllInstitutions } from '../../apis/institutionApis';
+import { useInstitutionList } from '../../store/institutionStore';
 const InstitutionList = () => {
-  const [institutionData, setInstitutionData] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const { institutions, setInstitutions } = useInstitutionList();
+  const [loading, setLoading] = useState(true);
   const [deleteId, setDeleteId] = useState();
   const [selectedInstitution, setSelectedInstitution] = useState({});
   const { isOpen, onOpen, onClose } = useDisclosure(); // delete modal
@@ -24,23 +26,21 @@ const InstitutionList = () => {
     onClose: onModalClose,
   } = useDisclosure(); // update modal
 
-  useEffect(() => {
-    getInstitutionData();
-  }, []);
-
-  const getInstitutionData = async () => {
-    try {
-      setLoading(true);
-      const response = await axiosInstance.get(`institution/getAll`);
-      if (response.data.status === 'success') {
-        setLoading(false);
-        setInstitutionData(response.data.institutions);
+  useQuery({
+    queryKey: ['institutions'],
+    queryFn: async () => {
+      try {
+        const response = await getAllInstitutions();
+        if (response.status === 200 && response.statusText === 'OK') {
+          setInstitutions(response?.data?.institutions);
+          setLoading(false);
+        }
+        return response?.data?.institutions;
+      } catch (error) {
+        console.log(error.message);
       }
-    } catch (error) {
-      setLoading(false);
-      console.log(error);
-    }
-  };
+    },
+  });
 
   const columns = useMemo(
     () => [
@@ -116,10 +116,10 @@ const InstitutionList = () => {
             </Flex>
           ) : (
             <>
-              {institutionData.length !== 0 ? (
+              {institutions.length !== 0 ? (
                 <TableComponent
                   columns={columns}
-                  data={institutionData}
+                  data={institutions}
                   buttonName='Add Institution'
                   buttonLink='/user/institutions/create'
                   isButton={true}

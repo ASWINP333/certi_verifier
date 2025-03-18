@@ -7,11 +7,11 @@ import {
   PinInput,
   PinInputField,
   Text,
+  useToast,
 } from '@chakra-ui/react';
 import { SLogo } from '../../assets';
 import { useState } from 'react';
 import axiosInstance from '../../config/axiosInstance';
-import { ToastContainer, toast } from 'react-toastify';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 const VerifyOtp = () => {
@@ -19,6 +19,7 @@ const VerifyOtp = () => {
   const email = new URLSearchParams(search).get('email');
   const [otp, setOtp] = useState('');
   const navigate = useNavigate();
+  const toast = useToast();
 
   const [loading, setLoading] = useState(false);
 
@@ -32,14 +33,28 @@ const VerifyOtp = () => {
       });
 
       if (response.data.status === 'success') {
-        console.log(response.data.message);
-        toast.success(response?.data?.message);
+        toast({
+          title: 'success',
+          description: response?.data?.message,
+          status: 'success',
+          position: 'top',
+          duration: 1500,
+          isClosable: true,
+        });
         setLoading(false);
         navigate('/');
       }
     } catch (error) {
       setLoading(false);
-      toast.error(error?.response?.data?.message);
+      toast({
+        title: 'error',
+        description:
+          error?.response?.data?.message || 'Error While verifying otp',
+        status: 'error',
+        duration: 2000,
+        isClosable: true,
+        position: 'top',
+      });
     }
   };
   return (
@@ -154,7 +169,6 @@ const VerifyOtp = () => {
           </Flex>
         </Flex>
       </Flex>
-      <ToastContainer position='top-center' theme='dark' />
     </Flex>
   );
 };

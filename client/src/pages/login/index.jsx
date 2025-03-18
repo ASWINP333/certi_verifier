@@ -1,11 +1,9 @@
-import { Button, chakra, Flex, Image, Text } from '@chakra-ui/react';
+import { Button, chakra, Flex, Image, Text, useToast } from '@chakra-ui/react';
 import { LoginInput, PasswordInput } from '../../components';
 import { IoMdLock, IoMdMail } from 'react-icons/io';
 import { SLogo } from '../../assets';
 import { useState } from 'react';
 import axiosInstance from '../../config/axiosInstance';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuthentication } from '../../contexts/authContext';
 
@@ -13,8 +11,10 @@ const Login = () => {
   const [show, setShow] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [btnLoading, setBtnLoading] = useState(false);
 
   const navigate = useNavigate();
+  const toast = useToast();
   const authentication = useAuthentication();
 
   const handleClick = () => setShow(!show);
@@ -22,13 +22,21 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      setBtnLoading(true);
       const response = await axiosInstance.post(`user/login`, {
         email,
         password,
       });
 
       if (response?.data?.status === 'success') {
-        toast.success(response?.data?.message || 'Login Successfully');
+        toast({
+          title: 'success',
+          description: response?.data?.message || 'Login Successfull',
+          status: 'success',
+          position: 'top',
+          duration: 1500,
+          isClosable: true,
+        });
 
         const token = response?.data?.token;
         const user = response?.data?.user;
@@ -36,9 +44,18 @@ const Login = () => {
         authentication.loginIn(token, user, () => {
           navigate('/user/dashboard');
         });
+        setBtnLoading(false);
       }
     } catch (error) {
-      toast.error(error?.response?.data?.message || 'Error While Login');
+      setBtnLoading(false);
+      toast({
+        title: 'error',
+        description: error?.response?.data?.message || 'FError While Login',
+        status: 'error',
+        duration: 2000,
+        isClosable: true,
+        position: 'top',
+      });
     }
   };
   return (
@@ -126,6 +143,8 @@ const Login = () => {
                 w='full'
                 mt='4'
                 _hover={{ bg: '#6D99A1' }}
+                isLoading={btnLoading}
+                loadingText='Loggin in..'
               >
                 Login
               </Button>
@@ -133,7 +152,6 @@ const Login = () => {
           </Flex>
         </Flex>
       </Flex>
-      <ToastContainer position='top-center' theme='dark' />
     </Flex>
   );
 };

@@ -1,10 +1,9 @@
-import { Button, chakra, Flex, Text } from '@chakra-ui/react';
+import { Button, chakra, Flex, Text, useToast } from '@chakra-ui/react';
 import { FormInput } from '../../components';
-import axiosInstance from '../../config/axiosInstance';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { updateInstitution } from '../../apis/institutionApis';
 
 const UpdateInstitution = ({ onClose, Idata }) => {
   const [btnLoading, setBtnLoading] = useState(false);
@@ -13,11 +12,26 @@ const UpdateInstitution = ({ onClose, Idata }) => {
   );
   const [address, setAddress] = useState(Idata?.address || '');
 
+  const toast = useToast();
+
+  const queryClient = useQueryClient();
+
   // Ensure state updates if Idata changes dynamically
   useEffect(() => {
     setInstitutionName(Idata?.institutionName || '');
     setAddress(Idata?.address || '');
   }, [Idata]);
+
+  const mutatedData = useMutation({
+    mutationFn: (id, updatedInstitution) => {
+      return updateInstitution(id, updatedInstitution);
+    },
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ['institutions'] }),
+    onError: (err) => {
+      console.log(err.message);
+    },
+  });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -29,25 +43,35 @@ const UpdateInstitution = ({ onClose, Idata }) => {
         address: address || Idata?.address,
       };
 
-      const response = await axiosInstance.put(
-        `institution/update/${Idata?.iId}`,
-        updatedData
-      );
+      const { data, status, statusText } = await mutatedData.mutateAsync({
+        id: Idata?.iId,
+        updatedData,
+      });
 
-      if (response.status === 200) {
-        toast.success(
-          response?.data?.message || 'Institution updated successfully'
-        );
+      if (status === 200 && statusText === 'OK') {
+        toast({
+          title: 'success',
+          description:
+            data?.data?.message || 'Institution updated successfully',
+          status: 'success',
+          position: 'top',
+          duration: 1500,
+          isClosable: true,
+        });
         setBtnLoading(false);
-        setTimeout(() => {
-          onClose();
-        }, 1500);
+        onClose();
       }
     } catch (error) {
       setBtnLoading(false);
-      toast.error(
-        error?.response?.data?.message || 'Failed to update institution'
-      );
+      toast({
+        title: 'error',
+        description:
+          error?.response?.data?.message || 'Failed to update institution',
+        status: 'error',
+        duration: 2000,
+        isClosable: true,
+        position: 'top',
+      });
     }
   };
 
@@ -78,6 +102,7 @@ const UpdateInstitution = ({ onClose, Idata }) => {
           isRequired={true}
           value={institutionName}
           onChange={(e) => setInstitutionName(e.target.value)}
+          labelColor='brand.white'
         />
         <FormInput
           label='Address'
@@ -86,6 +111,7 @@ const UpdateInstitution = ({ onClose, Idata }) => {
           isRequired={true}
           value={address}
           onChange={(e) => setAddress(e.target.value)}
+          labelColor='brand.white'
         />
         <Flex w='full' justify='space-between'>
           <Button
@@ -120,7 +146,6 @@ const UpdateInstitution = ({ onClose, Idata }) => {
           </Button>
         </Flex>
       </Flex>
-      <ToastContainer position='top-center' theme='dark' autoClose={2000} />
     </Flex>
   );
 };

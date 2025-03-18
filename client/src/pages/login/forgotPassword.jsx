@@ -1,16 +1,16 @@
-import { Button, chakra, Flex, Image, Text } from '@chakra-ui/react';
+import { Button, chakra, Flex, Image, Text, useToast } from '@chakra-ui/react';
 import { LoginInput } from '../../components';
 import { IoMdMail } from 'react-icons/io';
 import { SLogo } from '../../assets';
 import { useState } from 'react';
 import axiosInstance from '../../config/axiosInstance';
 import { Link, useNavigate } from 'react-router-dom';
-import { toast, ToastContainer } from 'react-toastify';
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const toast = useToast();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -20,17 +20,29 @@ const ForgotPassword = () => {
         email,
       });
 
-      toast.success(response?.data?.message);
-      console.log(response?.data?.status);
-
       if (response.data.status === 'success') {
-        toast.success(response?.data?.message);
+        toast({
+          title: 'success',
+          description: response?.data?.message,
+          status: 'success',
+          position: 'top',
+          duration: 1500,
+          isClosable: true,
+        });
         setLoading(false);
         navigate(`/otp-verify?email=${email}`);
       }
     } catch (error) {
       setLoading(false);
-      toast.error(error?.response?.data?.message);
+      toast({
+        title: 'error',
+        description:
+          error?.response?.data?.message || 'Error While forgot password',
+        status: 'error',
+        duration: 2000,
+        isClosable: true,
+        position: 'top',
+      });
     }
   };
   return (
@@ -128,7 +140,6 @@ const ForgotPassword = () => {
           </Flex>
         </Flex>
       </Flex>
-      <ToastContainer position='top-center' theme='dark' />
     </Flex>
   );
 };
