@@ -7,17 +7,20 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 import { MainModal, TableComponent } from '../../components';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { MdDelete, MdEdit } from 'react-icons/md';
 import axiosInstance from '../../config/axiosInstance';
 import CertificateDetails from './certificateDetails';
 import UpdateCertificate from './updateCertificate';
 import { MdVerified } from 'react-icons/md';
 import DeleteCertificate from './deleteCertificate';
+import { useCertificateList } from '../../store/certificateStore';
+import { useQuery } from '@tanstack/react-query';
+import { getMyCertificates } from '../../apis/certificateApis';
 const CertificateList = () => {
-  const [certificateData, setCertificateData] = useState([]);
+  const { certificates, setCertificates } = useCertificateList();
   const [singleCertificateData, setSingleCertificateData] = useState({});
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [singleLoading, setSingleLoading] = useState(false);
   const [deleteId, setDeleteId] = useState();
   const [selectedUser, setSelectedUser] = useState({});
@@ -34,9 +37,23 @@ const CertificateList = () => {
     onClose: onDetailModalClose,
   } = useDisclosure();
 
-  useEffect(() => {
-    getUsersData();
-  }, []);
+  useQuery({
+    queryKey: ['certificates'],
+    queryFn: async () => {
+      try {
+        const response = await getMyCertificates();
+        if (response.status === 200 && response.statusText === 'OK') {
+          setCertificates(response?.data?.certificates);
+          console.log(response?.data?.certificates);
+
+          setLoading(false);
+        }
+        return response?.data?.certificates;
+      } catch (error) {
+        console.log(error.message);
+      }
+    },
+  });
 
   const handleBatchClick = async (certificate) => {
     try {
@@ -53,20 +70,6 @@ const CertificateList = () => {
     } catch (error) {
       setSingleLoading(false);
       console.log(error?.message);
-    }
-  };
-
-  const getUsersData = async () => {
-    try {
-      setLoading(true);
-      const response = await axiosInstance.get(`certificate/myCertificates`);
-      if (response.data.status === 'success') {
-        setLoading(false);
-        setCertificateData(response?.data?.certificates);
-      }
-    } catch (error) {
-      setLoading(false);
-      console.log(error);
     }
   };
 
@@ -191,7 +194,7 @@ const CertificateList = () => {
           ) : (
             <TableComponent
               columns={columns}
-              data={certificateData}
+              data={certificates}
               buttonName='Create Certificate'
               buttonLink='/user/certificates/create'
               isButton={true}
@@ -208,7 +211,10 @@ const CertificateList = () => {
         onClose={onModalClose}
         bgColor='brand.dashboardBg'
       >
-        <UpdateCertificate onClose={onModalClose} data={selectedUser} />
+        <UpdateCertificate
+          onClose={onModalClose}
+          certificateData={selectedUser}
+        />
       </MainModal>
 
       <MainModal

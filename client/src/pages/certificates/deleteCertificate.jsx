@@ -1,21 +1,34 @@
 import { Button, Flex, Text, useToast } from '@chakra-ui/react';
-import axiosInstance from '../../config/axiosInstance';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { deleteCertificate } from '../../apis/certificateApis';
 const DeleteCertificate = ({ onClose, id }) => {
   const [loading, setLoading] = useState(false);
   const toast = useToast();
 
+  const queryClient = useQueryClient();
+
+  const mutatedData = useMutation({
+    mutationFn: (id) => {
+      return deleteCertificate(id);
+    },
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ['certificates'] }),
+    onError: (err) => {
+      console.log(err.message);
+    },
+  });
   const handleDelete = async () => {
     try {
       setLoading(true);
-      const response = await axiosInstance.delete(`certificate/delete/${id}`);
+      const { data, status, statusText } = await mutatedData.mutateAsync(id);
 
-      if (response.status === 200) {
+      if (status === 200 && statusText === 'OK') {
         toast({
           title: 'success',
           description:
-            response?.data?.message || 'Certificate deleted successfully',
+            data?.data?.message || 'Certificate deleted successfully',
           status: 'success',
           duration: 2000,
           isClosable: true,

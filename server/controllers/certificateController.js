@@ -115,6 +115,8 @@ const verifyCertificate = async (req, res) => {
       message: 'Certificate verified successfully',
     });
   } catch (error) {
+    console.log(error.message);
+    
     return res.status(400).json({
       status: 'error',
       message: 'Something went wrong while verifying certificate',

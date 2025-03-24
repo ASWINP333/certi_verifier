@@ -125,18 +125,11 @@ const Report = () => {
       {
         Header: 'Certificate Name',
         accessor: 'certificateName',
-      },                                                                                                          
+      },
       {
         Header: 'status',
         accessor: 'status',
       },
-      {
-        Header: 'Institution Name',
-        accessor: (row) => row?.issuedBy?.firstName || 'N/A',
-      },
-      
-      
-     
     ],
     []
   );

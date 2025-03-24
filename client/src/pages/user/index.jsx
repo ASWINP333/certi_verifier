@@ -6,14 +6,16 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 import { MainModal, TableComponent } from '../../components';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { MdDelete, MdEdit } from 'react-icons/md';
 import DeleteUser from './deleteUser';
 import UpdateUser from './updateUser';
-import axiosInstance from '../../config/axiosInstance';
+import { useQuery } from '@tanstack/react-query';
+import { getMyUsers } from '../../apis/userApis';
+import { useUserList } from '../../store/userStore';
 const UsersList = () => {
-  const [userData, setUserData] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const { users, setUsers } = useUserList();
+  const [loading, setLoading] = useState(true);
   const [deleteId, setDeleteId] = useState();
   const [selectedUser, setSelectedUser] = useState({});
   const { isOpen, onOpen, onClose } = useDisclosure(); // delete modal
@@ -23,23 +25,21 @@ const UsersList = () => {
     onClose: onModalClose,
   } = useDisclosure(); // update modal
 
-  useEffect(() => {
-    getUsersData();
-  }, []);
-
-  const getUsersData = async () => {
-    try {
-      setLoading(true);
-      const response = await axiosInstance.get(`user/myUsers`);
-      if (response.data.status === 'success') {
-        setLoading(false);
-        setUserData(response?.data?.data);
+  useQuery({
+    queryKey: ['users'],
+    queryFn: async () => {
+      try {
+        const response = await getMyUsers();
+        if (response.status === 200 && response.statusText === 'OK') {
+          setUsers(response?.data?.data);
+          setLoading(false);
+        }
+        return response?.data?.data;
+      } catch (error) {
+        console.log(error.message);
       }
-    } catch (error) {
-      setLoading(false);
-      console.log(error);
-    }
-  };
+    },
+  });
 
   const columns = useMemo(
     () => [
@@ -120,7 +120,7 @@ const UsersList = () => {
           ) : (
             <TableComponent
               columns={columns}
-              data={userData}
+              data={users}
               buttonName='Add User'
               buttonLink='/user/users/create'
               isButton={true}
@@ -137,7 +137,7 @@ const UsersList = () => {
         onClose={onModalClose}
         bgColor='brand.dashboardBg'
       >
-        <UpdateUser onClose={onModalClose} data={selectedUser} />
+        <UpdateUser onClose={onModalClose} userData={selectedUser} />
       </MainModal>
     </Flex>
   );

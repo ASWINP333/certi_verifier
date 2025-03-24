@@ -2,16 +2,28 @@ import { Button, chakra, Flex, Text, useToast } from '@chakra-ui/react';
 import { FormInput } from '../../components';
 import { useState } from 'react';
 import PropTypes from 'prop-types';
-import axiosInstance from '../../config/axiosInstance';
+import { updateUser } from '../../apis/userApis';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-const UpdateUser = ({ onClose, data }) => {
+const UpdateUser = ({ onClose, userData }) => {
   const [btnLoading, setBtnLoading] = useState(false);
-  const [firstName, setFirstName] = useState(data?.firstName || '');
-  const [lastName, setLastName] = useState(data?.lastName || '');
-  const [phoneNumber, setPhoneNumber] = useState(data?.phoneNumber || '');
-  const [designation, setDesignation] = useState(data?.designation || '');
+  const [firstName, setFirstName] = useState(userData?.firstName || '');
+  const [lastName, setLastName] = useState(userData?.lastName || '');
+  const [phoneNumber, setPhoneNumber] = useState(userData?.phoneNumber || '');
+  const [designation, setDesignation] = useState(userData?.designation || '');
 
   const toast = useToast();
+  const queryClient = useQueryClient();
+
+  const mutatedData = useMutation({
+    mutationFn: (id, updatedUser) => {
+      return updateUser(id, updatedUser);
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['users'] }),
+    onError: (err) => {
+      console.log(err.message);
+    },
+  });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,16 +36,19 @@ const UpdateUser = ({ onClose, data }) => {
         phoneNumber: phoneNumber || data?.phoneNumber,
         designation: designation || data?.designation,
       };
+      const userId = userData?._id;
 
-      const response = await axiosInstance.put(
-        `user/update/${data?._id}`,
-        updatedData
-      );
+      const { data, status, statusText } = await mutatedData.mutateAsync({
+        id: userId,
+        updatedData,
+      });
 
-      if (response.status === 200) {
+      console.log(data);
+
+      if (status === 200 && statusText === 'OK') {
         toast({
           title: 'success',
-          description: response?.data?.message || 'User updated successfully',
+          description: data?.data?.message || 'User updated successfully',
           status: 'success',
           position: 'top',
           duration: 1500,
@@ -43,6 +58,8 @@ const UpdateUser = ({ onClose, data }) => {
         onClose();
       }
     } catch (error) {
+      console.log(error);
+
       setBtnLoading(false);
       toast({
         title: 'error',
@@ -149,7 +166,7 @@ const UpdateUser = ({ onClose, data }) => {
 };
 
 UpdateUser.propTypes = {
-  data: PropTypes.object,
+  userData: PropTypes.object,
   onClose: PropTypes.func.isRequired,
 };
 export default UpdateUser;

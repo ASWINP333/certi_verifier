@@ -1,21 +1,34 @@
 import { Button, Flex, Text, useToast } from '@chakra-ui/react';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import axiosInstance from '../../config/axiosInstance';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { deleteUser } from '../../apis/userApis';
 
 const DeleteUser = ({ onClose, id }) => {
   const [loading, setLoading] = useState(false);
   const toast = useToast();
 
+  const queryClient = useQueryClient();
+
+  const mutatedData = useMutation({
+    mutationFn: (id) => {
+      return deleteUser(id);
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['users'] }),
+    onError: (err) => {
+      console.log(err.message);
+    },
+  });
+
   const handleDelete = async () => {
     try {
       setLoading(true);
-      const response = await axiosInstance.delete(`user/delete/${id}`);
+      const { data, status, statusText } = await mutatedData.mutateAsync(id);
 
-      if (response.status === 200) {
+      if (status === 200 && statusText === 'OK') {
         toast({
           title: 'success',
-          description: response?.data?.message || 'User Deleted successfully',
+          description: data?.data?.message || 'User Deleted successfully',
           status: 'success',
           position: 'top',
           duration: 1500,
@@ -27,6 +40,8 @@ const DeleteUser = ({ onClose, id }) => {
         onClose();
       }
     } catch (error) {
+      console.log(error);
+
       toast({
         title: 'error',
         description: error?.response?.data?.message || 'Failed to delete User',

@@ -1,19 +1,35 @@
 import { Button, chakra, Flex, Text, useToast } from '@chakra-ui/react';
 import { FormInput } from '../../components';
-import axiosInstance from '../../config/axiosInstance';
 import { useState } from 'react';
 import PropTypes from 'prop-types';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { updateCertificate } from '../../apis/certificateApis';
 
-const UpdateCertificate = ({ onClose, data }) => {
+const UpdateCertificate = ({ onClose, certificateData }) => {
   const [btnLoading, setBtnLoading] = useState(false);
-  const [candidateName, setCandidateName] = useState(data?.candidateName || '');
-  const [certificateName, setCertificateName] = useState(
-    data?.certificateName || ''
+  const [candidateName, setCandidateName] = useState(
+    certificateData?.candidateName || ''
   );
-  const [course, setCourse] = useState(data?.course || '');
-  const [grade, setGrade] = useState(data?.grade || '');
+  const [certificateName, setCertificateName] = useState(
+    certificateData?.certificateName || ''
+  );
+  const [course, setCourse] = useState(certificateData?.course || '');
+  const [grade, setGrade] = useState(certificateData?.grade || '');
 
   const toast = useToast();
+
+  const queryClient = useQueryClient();
+
+  const mutatedData = useMutation({
+    mutationFn: (id, updatedUser) => {
+      return updateCertificate(id, updatedUser);
+    },
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ['certificates'] }),
+    onError: (err) => {
+      console.log(err.message);
+    },
+  });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,16 +44,16 @@ const UpdateCertificate = ({ onClose, data }) => {
         status: 'pending',
       };
 
-      const response = await axiosInstance.put(
-        `certificate/update/${data?.cId}`,
-        updatedData
-      );
+      const { data, status, statusText } = await mutatedData.mutateAsync({
+        id: certificateData?.cId,
+        updatedData,
+      });
 
-      if (response.status === 200) {
+      if (status === 200 && statusText === 'OK') {
         toast({
           title: 'success',
           description:
-            response?.data?.message || 'Certificate Updated successfully',
+            data?.data?.message || 'Certificate Updated successfully',
           status: 'success',
           duration: 2000,
           isClosable: true,
@@ -86,7 +102,7 @@ const UpdateCertificate = ({ onClose, data }) => {
           type='text'
           isRequired={true}
           labelColor='brand.white'
-          value={data?.cId}
+          value={certificateData?.cId}
           isDisabled
         />
         <FormInput
@@ -163,7 +179,7 @@ const UpdateCertificate = ({ onClose, data }) => {
 };
 
 UpdateCertificate.propTypes = {
-  data: PropTypes.object,
+  certificateData: PropTypes.object,
   onClose: PropTypes.func.isRequired,
 };
 export default UpdateCertificate;

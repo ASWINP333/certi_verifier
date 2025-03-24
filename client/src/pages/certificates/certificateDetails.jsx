@@ -8,7 +8,6 @@ import dayjs from 'dayjs';
 const CertificateDetails = ({ data, onClose, loading }) => {
   const [verifyLoading, setVerifyLoading] = useState(false);
   const [revokeLoading, setRevokingLoading] = useState(false);
-  console.log(data);
 
   const toast = useToast();
 
