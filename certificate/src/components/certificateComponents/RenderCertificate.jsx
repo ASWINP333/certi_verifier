@@ -3,7 +3,6 @@ import { Flex, Text } from '@chakra-ui/react';
 import React from 'react';
 import CertificateTemplate1 from './CertificateTemplate1';
 
-
 const RenderCertificateTemplate = ({ templateId, ...rest }) => {
   const certificatePreviews = {
     CertificateTemplate1: () => <CertificateTemplate1 {...rest} />,
@@ -24,7 +23,7 @@ const RenderCertificateTemplate = ({ templateId, ...rest }) => {
   };
 
   const renderCertificate = (templateId) => {
-    if (templateId === '1234') {
+    if (templateId === '12345') {
       return 'CertificateTemplate1';
     }
     return 'default';

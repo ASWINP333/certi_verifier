@@ -1,5 +1,5 @@
 import { Button, chakra, Flex, Heading, useToast } from '@chakra-ui/react';
-import { FormInput } from '../../components';
+import { FormInput, SelectInput } from '../../components';
 import { useState } from 'react';
 import axiosInstance from '../../config/axiosInstance';
 import { useNavigate } from 'react-router-dom';
@@ -10,6 +10,7 @@ const CreateCertificate = () => {
   const [certificateName, setCertificateName] = useState('');
   const [course, setCourse] = useState('');
   const [grade, setGrade] = useState('');
+  const [template, setTemplate] = useState('');
   const [loading, setloading] = useState(false);
   const toast = useToast();
 
@@ -26,6 +27,7 @@ const CreateCertificate = () => {
         certificateName: certificateName,
         course: course,
         grade: grade,
+        templateId: template,
       };
 
       const response = await axiosInstance.post(
@@ -129,10 +131,35 @@ const CreateCertificate = () => {
               id='grade'
               type='text'
               isRequired={true}
-              w='45%'
+              w='90%'
               labelColor='brand.white'
               onChange={(e) => setGrade(e.target.value)}
             />
+            <SelectInput
+              id='institutionDetails'
+              name='institutionDetails'
+              validator={{
+                required: 'Choose a institution',
+              }}
+              w='90%'
+              options={[
+                {
+                  label: 'FSD Template',
+                  value: '12345',
+                },
+                {
+                  label: 'Graduation Template',
+                  value: '123456',
+                },
+              ]}
+              optionProps={{
+                background: '#0996A1',
+                color: '#ffffff',
+              }}
+              onChange={(e) => setTemplate(e.target.value)}
+            >
+              Select Template
+            </SelectInput>
           </Flex>
           <Flex w='95%' justify='space-between'>
             <Button

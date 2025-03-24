@@ -80,6 +80,8 @@ const CertificateDetails = ({ data, onClose, loading }) => {
       });
     }
   };
+
+  const link = `http://localhost:5174/certificate?cId=${data?.cId}&iId=${data?.institutionDetails?.iId}`;
   return (
     <Flex
       height='100%'
@@ -146,7 +148,8 @@ const CertificateDetails = ({ data, onClose, loading }) => {
             <Flex w='100%' alignItems='center' justify='space-between' mt='4'>
               <Flex
                 as={Link}
-                href='#'
+                href={link}
+                target='_blank'
                 bg='brand.mainTeal'
                 p='2'
                 w='15rem'
@@ -189,13 +192,7 @@ const CertificateDetails = ({ data, onClose, loading }) => {
                   onClick={handleCertificateRevoke}
                   isLoading={revokeLoading}
                   loadingText='Loading..'
-                  isDisabled={
-                    data?.status === 'revoked'
-                      ? true
-                      : data?.status === 'verified'
-                        ? true
-                        : false
-                  }
+                  isDisabled={data?.status === 'pending' ? false : true}
                 >
                   Reject
                 </Button>

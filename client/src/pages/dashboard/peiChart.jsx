@@ -31,11 +31,11 @@ const PeiChart = ({ chartSeries }) => {
     ],
     legend: {
       labels: {
-        colors: '#ffffff', 
+        colors: '#ffffff',
       },
     },
   };
-  
+
   return (
     <Flex w='full' h='full' alignItems='center' justify='center'>
       <Chart

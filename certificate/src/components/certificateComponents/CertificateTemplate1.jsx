@@ -6,13 +6,14 @@ import useWidth from '../../helpers/hooks/useWidthHook';
 import { certificateFrame2 } from '../../assets';
 
 const CertificateTemplate1 = ({
-  fullName,
   certificateId,
-  issuedDate,
-  issuedBy,
-  certificateType,
-  previewSizeMultiplier,
+  certificateName,
+  candidateName,
+  course,
   grade,
+  institutionName,
+  createdDate,
+  previewSizeMultiplier,
   ...rest
 }) => {
   const previewRef = useRef(null);
@@ -57,7 +58,7 @@ const CertificateTemplate1 = ({
             mt='20%'
             {...textCenterStyle}
           >
-            FULL STACK DEVELOPMENT
+            {certificateName}
           </Text>
           <Text
             htmlFor='certificate-for'
@@ -75,7 +76,7 @@ const CertificateTemplate1 = ({
             textTransform='capitalize'
             {...textCenterStyle}
           >
-            {fullName}
+            {candidateName}
           </Text>
           <Text
             htmlFor='description'
@@ -83,10 +84,10 @@ const CertificateTemplate1 = ({
             {...textCenterStyle}
           >
             This is to certify that the recipient has successfully completed the{' '}
-            {certificateType} program, demonstrating a high level of dedication.
-            The candidate has achieved an outstanding grade of {grade} ,
-            reflecting their exceptional understanding of the subject matter.
-            This certificate is proudly issued on {issuedDate}.
+            {course} program, demonstrating a high level of dedication. The
+            candidate has achieved an outstanding grade of {grade} , reflecting
+            their exceptional understanding of the subject matter. This
+            certificate is proudly issued on {createdDate}.
           </Text>
           <Flex
             htmlFor='signature-date'
@@ -106,7 +107,7 @@ const CertificateTemplate1 = ({
                 Date :
               </Text>
               <Text fontWeight='semibold' fontSize={resizeFactor * 0.8 + 'rem'}>
-                {issuedDate}
+                {createdDate}
               </Text>
             </Flex>
             <Flex gap='2'>

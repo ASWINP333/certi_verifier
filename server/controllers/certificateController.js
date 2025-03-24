@@ -6,7 +6,7 @@ import { Certificate, Institution } from '../models/index.js';
 
 const createCertificate = async (req, res) => {
   try {
-    const { cId, candidateName, course, grade, certificateName } = req.body;
+    const { cId, candidateName, course, grade, certificateName ,templateId} = req.body;
 
     const { _id } = req.user;
 
@@ -20,7 +20,7 @@ const createCertificate = async (req, res) => {
 
     const certificateUniqueId = cId + institutionDetail?.iId;
 
-    if (!cId || !candidateName || !course || !grade || !certificateName) {
+    if (!cId || !candidateName || !course || !grade || !certificateName || !templateId) {
       return res.status(404).json({
         status: 'failed',
         message: 'Please add all fields',
@@ -45,6 +45,7 @@ const createCertificate = async (req, res) => {
       grade,
       certificateName,
       issuedBy,
+      templateId
     });
 
     return res.status(201).json({
@@ -116,7 +117,7 @@ const verifyCertificate = async (req, res) => {
     });
   } catch (error) {
     console.log(error.message);
-    
+
     return res.status(400).json({
       status: 'error',
       message: 'Something went wrong while verifying certificate',
@@ -194,10 +195,20 @@ const getMyCertificates = async (req, res) => {
 
 const getSingleCertificate = async (req, res) => {
   try {
-    const { id } = req.params;
-    const certificate = await Certificate.findOne({ _id: id })
+    const { cId, iId } = req.params;
+    const certificateUniqueId = cId + iId;
+    const certificate = await Certificate.findOne({
+      certificateUniqueId: certificateUniqueId,
+    })
       .populate('institutionDetails')
       .populate('issuedBy');
+
+    if (!certificate) {
+      return res.status(404).json({
+        status: 'failed',
+        message: 'Certificate not found',
+      });
+    }
 
     // const blockchainCall = await contractInstance.methods
     //   .getCertificate(certificate?.certificateUniqueId)
@@ -271,6 +282,10 @@ const getCertificatesByDate = async (req, res) => {
   try {
     const { startDate, endDate } = req.query;
 
+    const { _id } = req.user;
+
+    const issuedBy = _id;
+
     // Validate date range
     if (!startDate || !endDate) {
       return res.status(400).json({
@@ -294,6 +309,7 @@ const getCertificatesByDate = async (req, res) => {
     // Find certificates within the date range and sort by createdAt (ascending)
     const certificates = await Certificate.find({
       createdAt: { $gte: start, $lte: end },
+      issuedBy,
     })
       .populate('institutionDetails')
       .populate('issuedBy')

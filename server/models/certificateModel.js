@@ -20,6 +20,10 @@ const certificateSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Certificate name is required'],
     },
+    templateId: {
+      type: String,
+      required: [true, 'Template ID is required'],
+    },
     institutionDetails: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Institution',

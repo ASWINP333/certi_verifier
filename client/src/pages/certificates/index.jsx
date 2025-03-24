@@ -59,7 +59,7 @@ const CertificateList = () => {
     try {
       setSingleLoading(true);
       const { data, status, statusText } = await axiosInstance.get(
-        `certificate/get/${certificate?._id}`
+        `certificate/get/${certificate?.cId}/${certificate?.institutionDetails?.iId}`
       );
 
       if (status === 200 && statusText === 'OK') {

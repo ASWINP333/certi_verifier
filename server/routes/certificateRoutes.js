@@ -30,8 +30,8 @@ certificateRoutes
   .get(authenticate.user, certificateController.getMyCertificates);
 
 certificateRoutes
-  .route('/get/:id')
-  .get(authenticate.user, certificateController.getSingleCertificate);
+  .route('/get/:cId/:iId')
+  .get(certificateController.getSingleCertificate);
 
 certificateRoutes
   .route('/update/:cId')
