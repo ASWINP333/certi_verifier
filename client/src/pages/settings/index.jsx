@@ -10,6 +10,7 @@ import { getItemFromLocalStorage } from '../../functions/localStorage';
 import { ColorModeSwitch, MainModal } from '../../components';
 import UpdateProfile from './updateProfile';
 import UpdatePassword from './updatePassword';
+import { useThemeColors } from '../../components/extras/colors';
 
 const Settings = () => {
   const user = getItemFromLocalStorage('user');
@@ -30,10 +31,9 @@ const Settings = () => {
     onClose: onModalPasswordClose,
   } = useDisclosure();
 
-  // Colors
-  const mainColor = useColorModeValue('brand.mainTeal','red');
-  const mainCardBg = useColorModeValue('tranparent','#3d3d3d');
-  
+  // Color
+  const { mainCardBg, mainColor } = useThemeColors();
+
   return (
     <Flex w='100%' h='100vh'>
       <Flex
@@ -67,11 +67,7 @@ const Settings = () => {
           >
             <Flex w='50rem' h='6rem' justify='space-between'>
               <Flex direction='column' gap='4'>
-                <Text
-                  color={mainColor}
-                  fontSize='1.2rem'
-                  fontWeight='semibold'
-                >
+                <Text color={mainColor} fontSize='1.2rem' fontWeight='semibold'>
                   Name
                 </Text>
                 <Text
