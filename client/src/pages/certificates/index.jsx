@@ -199,6 +199,7 @@ const CertificateList = () => {
               buttonLink='/user/certificates/create'
               isButton={true}
               isPagination={true}
+              isTemplateButton={true}
             />
           )}
         </Flex>

@@ -1,11 +1,22 @@
-import { Button, Flex, Heading, Text, useDisclosure } from '@chakra-ui/react';
+import {
+  Button,
+  Flex,
+  Heading,
+  Text,
+  useDisclosure,
+  useColorModeValue,
+} from '@chakra-ui/react';
 import { getItemFromLocalStorage } from '../../functions/localStorage';
-import { MainModal } from '../../components';
+import { ColorModeSwitch, MainModal } from '../../components';
 import UpdateProfile from './updateProfile';
 import UpdatePassword from './updatePassword';
 
 const Settings = () => {
   const user = getItemFromLocalStorage('user');
+
+  const lighModeText = 'Light';
+  const darkModeText = 'Dark';
+  const colorModeText = useColorModeValue(lighModeText, darkModeText);
 
   const {
     isOpen: isModalOpen,
@@ -18,6 +29,11 @@ const Settings = () => {
     onOpen: onModalPasswordOpen,
     onClose: onModalPasswordClose,
   } = useDisclosure();
+
+  // Colors
+  const mainColor = useColorModeValue('brand.mainTeal','red');
+  const mainCardBg = useColorModeValue('tranparent','#3d3d3d');
+  
   return (
     <Flex w='100%' h='100vh'>
       <Flex
@@ -47,11 +63,12 @@ const Settings = () => {
             py={{ base: '4', md: '6' }}
             borderRadius='0.7rem'
             borderColor='brand.mainTeal'
+            bg={mainCardBg}
           >
             <Flex w='50rem' h='6rem' justify='space-between'>
               <Flex direction='column' gap='4'>
                 <Text
-                  color='brand.mainTeal'
+                  color={mainColor}
                   fontSize='1.2rem'
                   fontWeight='semibold'
                 >
@@ -122,6 +139,21 @@ const Settings = () => {
               >
                 Edit
               </Button>
+            </Flex>
+            <Flex w='50rem' h='6rem' justify='space-between'>
+              <Flex direction='column' gap='4'>
+                <Text
+                  color='brand.mainTeal'
+                  fontSize='1.2rem'
+                  fontWeight='semibold'
+                >
+                  Color Mode
+                </Text>
+                <Text color='brand.white' fontSize='1.1rem'>
+                  {colorModeText}
+                </Text>
+              </Flex>
+              <ColorModeSwitch mt='4' mx='6' />
             </Flex>
           </Flex>
         </Flex>

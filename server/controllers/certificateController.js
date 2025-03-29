@@ -6,7 +6,8 @@ import { Certificate, Institution } from '../models/index.js';
 
 const createCertificate = async (req, res) => {
   try {
-    const { cId, candidateName, course, grade, certificateName ,templateId} = req.body;
+    const { cId, candidateName, course, grade, certificateName, templateId } =
+      req.body;
 
     const { _id } = req.user;
 
@@ -20,7 +21,14 @@ const createCertificate = async (req, res) => {
 
     const certificateUniqueId = cId + institutionDetail?.iId;
 
-    if (!cId || !candidateName || !course || !grade || !certificateName || !templateId) {
+    if (
+      !cId ||
+      !candidateName ||
+      !course ||
+      !grade ||
+      !certificateName ||
+      !templateId
+    ) {
       return res.status(404).json({
         status: 'failed',
         message: 'Please add all fields',
@@ -45,7 +53,7 @@ const createCertificate = async (req, res) => {
       grade,
       certificateName,
       issuedBy,
-      templateId
+      templateId,
     });
 
     return res.status(201).json({
@@ -201,7 +209,8 @@ const getSingleCertificate = async (req, res) => {
       certificateUniqueId: certificateUniqueId,
     })
       .populate('institutionDetails')
-      .populate('issuedBy');
+      .populate('issuedBy')
+      .populate('templateId');
 
     if (!certificate) {
       return res.status(404).json({

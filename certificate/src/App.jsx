@@ -1,5 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 import { routes } from './routes';
+import AuthProvider from './contexts/authContext';
 
 function App() {
   const renderRoute = (route) =>
@@ -12,9 +13,9 @@ function App() {
     );
 
   return (
-    <>
+    <AuthProvider>
       <Routes>{routes.map(renderRoute)}</Routes>
-    </>
+    </AuthProvider>
   );
 }
 

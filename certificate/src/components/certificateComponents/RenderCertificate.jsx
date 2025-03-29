@@ -3,9 +3,11 @@ import { Flex, Text } from '@chakra-ui/react';
 import React from 'react';
 import CertificateTemplate1 from './CertificateTemplate1';
 
-const RenderCertificateTemplate = ({ templateId, ...rest }) => {
+const RenderCertificateTemplate = ({ templateData, ...rest }) => {
   const certificatePreviews = {
-    CertificateTemplate1: () => <CertificateTemplate1 {...rest} />,
+    CertificateTemplate1: () => (
+      <CertificateTemplate1 templateData={templateData} {...rest} />
+    ),
     default: () => (
       <Flex
         bgColor='white'
@@ -29,7 +31,7 @@ const RenderCertificateTemplate = ({ templateId, ...rest }) => {
     return 'default';
   };
 
-  return certificatePreviews[renderCertificate(templateId)]();
+  return certificatePreviews[renderCertificate(templateData?.templateId)]();
 };
 
 export default RenderCertificateTemplate;

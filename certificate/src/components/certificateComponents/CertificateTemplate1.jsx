@@ -6,6 +6,7 @@ import useWidth from '../../helpers/hooks/useWidthHook';
 import { certificateFrame2 } from '../../assets';
 
 const CertificateTemplate1 = ({
+  templateData,
   certificateId,
   certificateName,
   candidateName,
@@ -27,6 +28,8 @@ const CertificateTemplate1 = ({
 
   const certificateSize = { width: 1123, height: 794 };
 
+  const template = templateData?.templateImage?.url;
+
   return (
     <Box
       maxWidth={`${certificateSize.width * previewSizeMultiplier}px `}
@@ -42,7 +45,7 @@ const CertificateTemplate1 = ({
       <Flex w='auto' h='full' alignItems='center' position='relative'>
         <Image
           ref={previewRef}
-          src={certificateFrame2}
+          src={template}
           alt='certificate'
           draggable='false'
           w='auto'

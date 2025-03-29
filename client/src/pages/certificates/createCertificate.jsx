@@ -3,11 +3,13 @@ import { FormInput, SelectInput } from '../../components';
 import { useState } from 'react';
 import axiosInstance from '../../config/axiosInstance';
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
 const CreateCertificate = () => {
   const [cId, setCId] = useState('');
   const [candidateName, setCandidateName] = useState('');
   const [certificateName, setCertificateName] = useState('');
+  const [templates, setTemplates] = useState([]);
   const [course, setCourse] = useState('');
   const [grade, setGrade] = useState('');
   const [template, setTemplate] = useState('');
@@ -15,6 +17,28 @@ const CreateCertificate = () => {
   const toast = useToast();
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    let isMounted = true;
+    if (isMounted) getTemplates();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const getTemplates = async () => {
+    try {
+      const { data, status, statusText } =
+        await axiosInstance.get(`template/getAll`);
+
+      if (status === 200 && statusText === 'OK') {
+        setTemplates(data);
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -29,6 +53,8 @@ const CreateCertificate = () => {
         grade: grade,
         templateId: template,
       };
+
+      console.log(certificateData);
 
       const response = await axiosInstance.post(
         `certificate/create`,
@@ -142,16 +168,10 @@ const CreateCertificate = () => {
                 required: 'Choose a institution',
               }}
               w='90%'
-              options={[
-                {
-                  label: 'FSD Template',
-                  value: '12345',
-                },
-                {
-                  label: 'Graduation Template',
-                  value: '123456',
-                },
-              ]}
+              options={templates.map((item) => ({
+                label: item?.templateName,
+                value: item?._id,
+              }))}
               optionProps={{
                 background: '#0996A1',
                 color: '#ffffff',

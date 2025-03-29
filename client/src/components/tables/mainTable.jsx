@@ -96,6 +96,7 @@ const TableComponent = ({
   isPagination,
   buttonName,
   icon,
+  isTemplateButton,
 }) => {
   // Default column filter
   const defaultColumn = React.useMemo(
@@ -179,25 +180,45 @@ const TableComponent = ({
   return (
     <Flex w='full' flexDirection='column' gap='4'>
       <Flex justify='space-between' pb='2' gap={{ base: '2', md: '0' }}>
-        {isButton && (
-          <Button
-            as={Link}
-            bg='brand.mainTeal'
-            display='flex'
-            color='brand.white'
-            gap='2'
-            px='8'
-            size='sm'
-            _hover={{ background: '#3DC76C' }}
-            w={{ base: '8rem', md: '9rem' }}
-            to={buttonLink}
-          >
-            <Flex>{icon}</Flex>
-            <Text fontSize={{ base: '0.8rem', md: '0.90rem' }}>
-              {buttonName}
-            </Text>
-          </Button>
-        )}
+        <Flex gap='4'>
+          {isButton && (
+            <Button
+              as={Link}
+              bg='brand.mainTeal'
+              display='flex'
+              color='brand.white'
+              gap='2'
+              px='8'
+              size='sm'
+              _hover={{ background: '#3DC76C' }}
+              w={{ base: '8rem', md: '9rem' }}
+              to={buttonLink}
+            >
+              <Flex>{icon}</Flex>
+              <Text fontSize={{ base: '0.8rem', md: '0.90rem' }}>
+                {buttonName}
+              </Text>
+            </Button>
+          )}
+          {isTemplateButton && (
+            <Button
+              as={Link}
+              bg='brand.mainTeal'
+              display='flex'
+              color='brand.white'
+              gap='2'
+              px='8'
+              size='sm'
+              _hover={{ background: '#3DC76C' }}
+              w={{ base: '8rem', md: '9rem' }}
+              to='/user/templates'
+            >
+              <Text fontSize={{ base: '0.8rem', md: '0.90rem' }}>
+                Templates
+              </Text>
+            </Button>
+          )}
+        </Flex>
         <Flex></Flex>
         <GlobalSearch
           preGlobalFilteredRows={preGlobalFilteredRows}
@@ -395,6 +416,7 @@ TableComponent.propTypes = {
   columns: PropTypes.array.isRequired,
   data: PropTypes.array.isRequired,
   isButton: PropTypes.bool,
+  isTemplateButton: PropTypes.bool,
   buttonLink: PropTypes.string,
   isPagination: PropTypes.bool,
   buttonName: PropTypes.string,

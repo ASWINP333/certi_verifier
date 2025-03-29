@@ -8,6 +8,8 @@ import FormInput from './formComponents/formInput';
 import SelectInput from './formComponents/selectInput';
 import SimpleTableComponent from './tables/simpleTable';
 import DateInput from './formComponents/dateInput';
+import FileUploadInput from './formComponents/fileInput';
+import ColorModeSwitch from './extras/colorModeSwitch';
 
 export {
   LoginInput,
@@ -20,4 +22,6 @@ export {
   SelectInput,
   SimpleTableComponent,
   DateInput,
+  FileUploadInput,
+  ColorModeSwitch,
 };

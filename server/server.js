@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import app from './app.js';
+import cloudinary from 'cloudinary';
 
 import connectDatabase from './config/database.js';
 
@@ -12,6 +13,12 @@ process.on('uncaughtException', (err) => {
 
 //Connecting to the database
 connectDatabase();
+
+cloudinary.v2.config({
+  cloud_name: process.env.CLOUDINARY_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 const port = process.env.PORT || 4000;
 

@@ -10,6 +10,8 @@ import Settings from './settings';
 import CertificateList from './certificates';
 import CreateCertificate from './certificates/createCertificate';
 import Report from './report';
+import Templates from './templates';
+import CreateTemplate from './templates/createTemplate';
 
 export {
   Login,
@@ -24,4 +26,6 @@ export {
   CertificateList,
   CreateCertificate,
   Report,
+  Templates,
+  CreateTemplate,
 };
