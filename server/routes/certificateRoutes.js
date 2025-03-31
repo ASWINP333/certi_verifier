@@ -10,6 +10,10 @@ certificateRoutes
   .post(authenticate.user, certificateController.createCertificate);
 
 certificateRoutes
+  .route('/student/create')
+  .post(authenticate.user, certificateController.createStudentCertificate);
+
+certificateRoutes
   .route('/verify/:cId')
   .post(authenticate.user, certificateController.verifyCertificate);
 
@@ -28,6 +32,10 @@ certificateRoutes
 certificateRoutes
   .route('/myCertificates')
   .get(authenticate.user, certificateController.getMyCertificates);
+
+certificateRoutes
+  .route('/institutionCertificates')
+  .get(authenticate.user, certificateController.getInstitutionCertificates);
 
 certificateRoutes
   .route('/get/:cId/:iId')

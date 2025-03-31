@@ -5,5 +5,6 @@ export const useThemeColors = () => {
     mainBg: useColorModeValue('brand.white', 'brand.mainTeal'),
     mainColor: useColorModeValue('brand.mainTeal', 'brand.white'),
     mainCardBg: useColorModeValue('tranparent', '#3d3d3d'),
+    dashboardBg: useColorModeValue('brand.mainTealLight', 'brand.dashboardBg'),
   };
 };

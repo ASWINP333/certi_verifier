@@ -1,50 +1,41 @@
 import { Button, chakra, Flex, Heading, useToast } from '@chakra-ui/react';
-import { FormInput, SelectInput } from '../../components';
-import { useEffect, useState } from 'react';
+import { FormInput } from '../../components';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../config/axiosInstance';
 import { getItemFromLocalStorage } from '../../functions/localStorage';
 
-const CreateUser = () => {
+const CreateStudent = () => {
+  const user = getItemFromLocalStorage('user');
   const [btnLoading, setBtnLoading] = useState(false);
-  const [institutionData, setInstitutionData] = useState([]);
   const [firstName, setFirstName] = useState('');
   const [lastName, setlastName] = useState('');
   const [email, setEmail] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [designation, setDesignation] = useState('');
-  const [institutionDetails, setInstitutionDetails] = useState('');
+  const [enrollmentNumber, setEnrollmentNumber] = useState('');
+  const [courseDetails, setCourseDetails] = useState('');
 
   const navigate = useNavigate();
   const toast = useToast();
 
-  const user = getItemFromLocalStorage('user');
-  const role = user?.role;
+  const instData = user?.institutionDetailsData?._id?.toString() || '';
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       setBtnLoading(true);
 
-      const userRole =
-        role === 'Admin' ? 'Owner' : role === 'Owner' ? 'Staff' : '';
-
-      const instData = user?.institutionDetailsData?._id?.toString() || '';
-
-      const institutionId = role === 'Owner' ? instData : '';
-
       const userData = {
         firstName,
         lastName,
         email,
         phoneNumber,
-        designation,
-        institutionDetails:
-          institutionDetails === '' ? institutionId : institutionDetails,
-        role: userRole,
+        enrollmentNumber,
+        institutionDetails: instData,
+        courseDetails,
       };
 
-      const response = await axiosInstance.post(`user/create`, userData);
+      const response = await axiosInstance.post(`student/create`, userData);
 
       if (response.status === 201) {
         toast({
@@ -56,7 +47,7 @@ const CreateUser = () => {
           isClosable: true,
         });
         setBtnLoading(false);
-        navigate('/user/users');
+        navigate('/user/students');
       }
     } catch (error) {
       setBtnLoading(false);
@@ -71,22 +62,6 @@ const CreateUser = () => {
     }
   };
 
-  useEffect(() => {
-    getInstitutionData();
-  }, []);
-
-  const getInstitutionData = async () => {
-    try {
-      const response = await axiosInstance.get(`institution/getAll`);
-      if (response.data.status === 'success') {
-        console.log(response.data.institutions);
-        setInstitutionData(response.data.institutions);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   return (
     <Flex w='100%' h='100vh'>
       <Flex
@@ -98,7 +73,7 @@ const CreateUser = () => {
         gap='12'
       >
         <Heading color='brand.mainTeal' textTransform='uppercase'>
-          CREATE USER
+          CREATE STUDENT
         </Heading>
 
         <Flex
@@ -151,35 +126,23 @@ const CreateUser = () => {
           </Flex>
           <Flex w='full'>
             <FormInput
-              label='Designation'
-              id='designation'
+              label='E Number'
+              id='enrollmentNumber'
               type='text'
               isRequired={true}
-              w={role === 'Admin' ? '90%' : '45%'}
+              w='90%'
               labelColor='brand.white'
-              onChange={(e) => setDesignation(e.target.value)}
+              onChange={(e) => setEnrollmentNumber(e.target.value)}
             />
-            {role === 'Admin' && (
-              <SelectInput
-                id='institutionDetails'
-                name='institutionDetails'
-                validator={{
-                  required: 'Choose a institution',
-                }}
-                w='90%'
-                options={institutionData.map((item) => ({
-                  label: item?.institutionName,
-                  value: item?._id,
-                }))}
-                optionProps={{
-                  background: '#0996A1',
-                  color: '#ffffff',
-                }}
-                onChange={(e) => setInstitutionDetails(e.target.value)}
-              >
-                institutionDetails
-              </SelectInput>
-            )}
+            <FormInput
+              label='courseDetails'
+              id='courseDetails'
+              type='text'
+              isRequired={true}
+              w='90%'
+              labelColor='brand.white'
+              onChange={(e) => setCourseDetails(e.target.value)}
+            />
           </Flex>
           <Flex w='95%' justify='space-between'>
             <Button
@@ -221,4 +184,4 @@ const CreateUser = () => {
   );
 };
 
-export default CreateUser;
+export default CreateStudent;

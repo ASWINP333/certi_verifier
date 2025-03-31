@@ -2,7 +2,7 @@ import {
   contractInstance,
   deployerAddress,
 } from '../blockchain-services/instance.js';
-import { Certificate, Institution } from '../models/index.js';
+import { Certificate, Institution, Student } from '../models/index.js';
 
 const createCertificate = async (req, res) => {
   try {
@@ -50,6 +50,71 @@ const createCertificate = async (req, res) => {
       candidateName,
       institutionDetails: institutionid,
       course,
+      grade,
+      certificateName,
+      issuedBy,
+      templateId,
+    });
+
+    return res.status(201).json({
+      status: 'success',
+      message: 'Certificate created succesfully',
+      certificateData: {
+        id: certificate._id,
+      },
+    });
+  } catch (error) {
+    console.log(error.message);
+
+    return res.status(400).json({
+      status: 'error',
+      message: 'Something went wrong while creating certificate',
+    });
+  }
+};
+
+const createStudentCertificate = async (req, res) => {
+  try {
+    const { cId, grade, certificateName, templateId, student } = req.body;
+
+    const { _id } = req.user;
+
+    const institutionid = req.user.institutionDetails;
+
+    const institutionDetail = await Institution.findOne({
+      _id: institutionid,
+    });
+
+    const issuedBy = _id;
+
+    const certificateUniqueId = cId + institutionDetail?.iId;
+
+    if (!cId || !grade || !certificateName || !templateId) {
+      return res.status(404).json({
+        status: 'failed',
+        message: 'Please add all fields',
+      });
+    }
+
+    const studentData = await Student.findById({ _id: student });
+
+    const certificateExist = await Certificate.findOne({ cId: cId });
+
+    if (certificateExist) {
+      return res.status(404).json({
+        status: 'failed',
+        message: 'Certificate exists, check certificate ID',
+      });
+    }
+
+    const studentName = studentData?.firstName + studentData?.lastName;
+    const courseName = studentData?.courseDetails;
+    const certificate = await Certificate.create({
+      cId,
+      certificateUniqueId,
+      candidateName: studentName,
+      institutionDetails: institutionid,
+      course: courseName,
       grade,
       certificateName,
       issuedBy,
@@ -201,6 +266,27 @@ const getMyCertificates = async (req, res) => {
   }
 };
 
+const getInstitutionCertificates = async (req, res) => {
+  try {
+    const institutionId = req.user.institutionDetails;
+    const certificates = await Certificate.find({
+      institutionDetails: institutionId,
+    })
+      .populate('institutionDetails')
+      .populate('issuedBy');
+    return res.status(200).json({
+      status: 'success',
+      message: 'Certificates fetched successfully',
+      certificates,
+    });
+  } catch (error) {
+    return res.status(400).json({
+      status: 'error',
+      message: 'Something went wrong while fetching my certificates',
+    });
+  }
+};
+
 const getSingleCertificate = async (req, res) => {
   try {
     const { cId, iId } = req.params;
@@ -291,7 +377,8 @@ const getCertificatesByDate = async (req, res) => {
   try {
     const { startDate, endDate } = req.query;
 
-    const { _id } = req.user;
+    const { _id, role } = req.user;
+    const institutionid = req.user.institutionDetails;
 
     const issuedBy = _id;
 
@@ -315,27 +402,72 @@ const getCertificatesByDate = async (req, res) => {
       });
     }
 
-    // Find certificates within the date range and sort by createdAt (ascending)
-    const certificates = await Certificate.find({
-      createdAt: { $gte: start, $lte: end },
-      issuedBy,
-    })
-      .populate('institutionDetails')
-      .populate('issuedBy')
-      .sort({ createdAt: 1 });
+    if (role === 'Staff') {
+      // Find certificates within the date range and sort by createdAt (ascending)
+      const certificates = await Certificate.find({
+        createdAt: { $gte: start, $lte: end },
+        issuedBy,
+      })
+        .populate('institutionDetails')
+        .populate('issuedBy')
+        .sort({ createdAt: 1 });
 
-    if (!certificates.length) {
-      return res.status(404).json({
-        status: 'error',
-        message: 'No certificates found for the given date range',
+      if (!certificates.length) {
+        return res.status(404).json({
+          status: 'error',
+          message: 'No certificates found for the given date range',
+        });
+      }
+
+      return res.status(200).json({
+        status: 'success',
+        message: 'Certificates fetched successfully',
+        certificates,
+      });
+    } else if (role === 'Owner') {
+      // Find certificates within the date range and sort by createdAt (ascending)
+      const certificates = await Certificate.find({
+        createdAt: { $gte: start, $lte: end },
+        institutionDetails: institutionid,
+      })
+        .populate('institutionDetails')
+        .populate('issuedBy')
+        .sort({ createdAt: 1 });
+
+      if (!certificates.length) {
+        return res.status(404).json({
+          status: 'error',
+          message: 'No certificates found for the given date range',
+        });
+      }
+
+      return res.status(200).json({
+        status: 'success',
+        message: 'Certificates fetched successfully',
+        certificates,
+      });
+    }else {
+       // Find certificates within the date range and sort by createdAt (ascending)
+       const certificates = await Certificate.find({
+        createdAt: { $gte: start, $lte: end },
+      })
+        .populate('institutionDetails')
+        .populate('issuedBy')
+        .sort({ createdAt: 1 });
+
+      if (!certificates.length) {
+        return res.status(404).json({
+          status: 'error',
+          message: 'No certificates found for the given date range',
+        });
+      }
+
+      return res.status(200).json({
+        status: 'success',
+        message: 'Certificates fetched successfully',
+        certificates,
       });
     }
-
-    return res.status(200).json({
-      status: 'success',
-      message: 'Certificates fetched successfully',
-      certificates,
-    });
   } catch (error) {
     console.error('Error fetching certificates by date:', error);
     return res.status(500).json({
@@ -355,4 +487,6 @@ export const certificateController = {
   getMyCertificates,
   revokeCertificate,
   getCertificatesByDate,
+  createStudentCertificate,
+  getInstitutionCertificates,
 };

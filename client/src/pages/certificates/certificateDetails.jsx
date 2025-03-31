@@ -4,11 +4,15 @@ import { useState } from 'react';
 import { GoLink } from 'react-icons/go';
 import axiosInstance from '../../config/axiosInstance';
 import dayjs from 'dayjs';
+import { getItemFromLocalStorage } from '../../functions/localStorage';
 
 const CertificateDetails = ({ data, onClose, loading }) => {
   const [verifyLoading, setVerifyLoading] = useState(false);
   const [revokeLoading, setRevokingLoading] = useState(false);
 
+  const user = getItemFromLocalStorage('user');
+
+  const role = user?.role;
   const toast = useToast();
 
   const handleCertificateVerify = async (e) => {
@@ -163,40 +167,42 @@ const CertificateDetails = ({ data, onClose, loading }) => {
                 View More Details
                 <GoLink />
               </Flex>
-              <Flex alignItems='center' gap='2' color='brand.white'>
-                <Button
-                  bg='green.300'
-                  color='brand.white'
-                  alignItems='center'
-                  minW='5rem'
-                  justify='center'
-                  px='2'
-                  py='1'
-                  borderRadius='1rem'
-                  onClick={handleCertificateVerify}
-                  isLoading={verifyLoading}
-                  loadingText='Loading..'
-                  isDisabled={data?.status === 'pending' ? false : true}
-                >
-                  Approve
-                </Button>
-                <Button
-                  bg='red.400'
-                  color='brand.white'
-                  alignItems='center'
-                  minW='5rem'
-                  justify='center'
-                  px='2'
-                  py='1'
-                  borderRadius='1rem'
-                  onClick={handleCertificateRevoke}
-                  isLoading={revokeLoading}
-                  loadingText='Loading..'
-                  isDisabled={data?.status === 'pending' ? false : true}
-                >
-                  Reject
-                </Button>
-              </Flex>
+              {(role === 'Admin' || role === 'Owner') && (
+                <Flex alignItems='center' gap='2' color='brand.white'>
+                  <Button
+                    bg='green.300'
+                    color='brand.white'
+                    alignItems='center'
+                    minW='5rem'
+                    justify='center'
+                    px='2'
+                    py='1'
+                    borderRadius='1rem'
+                    onClick={handleCertificateVerify}
+                    isLoading={verifyLoading}
+                    loadingText='Loading..'
+                    isDisabled={data?.status === 'pending' ? false : true}
+                  >
+                    Approve
+                  </Button>
+                  <Button
+                    bg='red.400'
+                    color='brand.white'
+                    alignItems='center'
+                    minW='5rem'
+                    justify='center'
+                    px='2'
+                    py='1'
+                    borderRadius='1rem'
+                    onClick={handleCertificateRevoke}
+                    isLoading={revokeLoading}
+                    loadingText='Loading..'
+                    isDisabled={data?.status === 'pending' ? false : true}
+                  >
+                    Reject
+                  </Button>
+                </Flex>
+              )}
             </Flex>
           </Flex>
         </>

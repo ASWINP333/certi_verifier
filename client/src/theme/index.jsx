@@ -11,6 +11,7 @@ const theme = extendTheme({
       dashboardBg: '#2B2B2B',
       sidebarMainBg: '#171717',
       mainTeal: '#0996A1',
+      mainTealLight: '#C7EFF2',
     },
   },
   fonts: {

@@ -16,7 +16,11 @@ import { MdVerified } from 'react-icons/md';
 import DeleteCertificate from './deleteCertificate';
 import { useCertificateList } from '../../store/certificateStore';
 import { useQuery } from '@tanstack/react-query';
-import { getMyCertificates } from '../../apis/certificateApis';
+import {
+  getInstitutionCertificates,
+  getMyCertificates,
+} from '../../apis/certificateApis';
+import { getItemFromLocalStorage } from '../../functions/localStorage';
 const CertificateList = () => {
   const { certificates, setCertificates } = useCertificateList();
   const [singleCertificateData, setSingleCertificateData] = useState({});
@@ -25,6 +29,12 @@ const CertificateList = () => {
   const [deleteId, setDeleteId] = useState();
   const [selectedUser, setSelectedUser] = useState({});
   const { isOpen, onOpen, onClose } = useDisclosure(); // delete modal
+
+  const user = getItemFromLocalStorage('user');
+
+  const isOwner = user?.role === 'Owner';
+  const isStaff = user?.role === 'Staff';
+
   const {
     isOpen: isModalOpen,
     onOpen: onModalOpen,
@@ -41,7 +51,13 @@ const CertificateList = () => {
     queryKey: ['certificates'],
     queryFn: async () => {
       try {
-        const response = await getMyCertificates();
+        let response;
+        if (isOwner) {
+          response = await getInstitutionCertificates();
+        } else {
+          response = await getMyCertificates();
+        }
+
         if (response.status === 200 && response.statusText === 'OK') {
           setCertificates(response?.data?.certificates);
           console.log(response?.data?.certificates);
@@ -197,9 +213,9 @@ const CertificateList = () => {
               data={certificates}
               buttonName='Create Certificate'
               buttonLink='/user/certificates/create'
-              isButton={true}
+              isButton={isStaff ? true : false}
               isPagination={true}
-              isTemplateButton={true}
+              isTemplateButton={isStaff ? true : false}
             />
           )}
         </Flex>

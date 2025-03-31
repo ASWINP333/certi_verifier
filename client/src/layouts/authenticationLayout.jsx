@@ -1,9 +1,11 @@
-import { Flex } from '@chakra-ui/react';
+import { Flex, useColorModeValue } from '@chakra-ui/react';
 import { Outlet } from 'react-router-dom';
 import { Footer } from '../components';
 import { MainBg } from '../assets';
 
 const AuthenticationLayout = () => {
+  const loginImage = useColorModeValue('none', MainBg);
+  const loginBg = useColorModeValue('brand.mainTealLight', '');
   return (
     <Flex
       gap='4'
@@ -13,7 +15,8 @@ const AuthenticationLayout = () => {
       alignItems='center'
       justifyContent='center'
       overflow='hidden'
-      backgroundImage={`url(${MainBg})`}
+      backgroundImage={`url(${loginImage})`}
+      bg={loginBg}
       backgroundSize='cover'
       backgroundPosition='center'
     >

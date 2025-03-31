@@ -1,4 +1,4 @@
-import { User } from '../models/index.js';
+import { Institution, User } from '../models/index.js';
 import sendEmail from '../services/nodemailer.js';
 import {
   generateOtp,
@@ -84,7 +84,18 @@ const login = async (req, res) => {
       });
     }
 
-    const { _id, firstName, lastName, phoneNumber, designation, role } = user;
+    const {
+      _id,
+      firstName,
+      lastName,
+      phoneNumber,
+      designation,
+      role,
+      institutionDetails,
+    } = user;
+    const institutionDetailsData = await Institution.findById({
+      _id: institutionDetails,
+    });
     if (user && (await bcrypt.compare(password, user.password))) {
       return res.status(200).json({
         status: 'success',
@@ -98,6 +109,7 @@ const login = async (req, res) => {
           phoneNumber,
           designation,
           role,
+          institutionDetailsData,
         },
       });
     }
@@ -126,6 +138,7 @@ const createUser = async (req, res) => {
       phoneNumber,
       designation,
       institutionDetails,
+      role,
     } = req.body;
     const id = req.user._id;
     const creatorId = id;
@@ -156,6 +169,7 @@ const createUser = async (req, res) => {
       designation,
       creatorId,
       institutionDetails,
+      role,
     });
 
     if (user) {

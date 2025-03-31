@@ -1,8 +1,10 @@
 import { Flex } from '@chakra-ui/react';
 import { Outlet } from 'react-router-dom';
 import { DesktopSidebar, Footer } from '../components';
+import { useThemeColors } from '../components/extras/colors';
 
 const DesktopLayout = () => {
+  const { dashboardBg } = useThemeColors();
   return (
     <Flex
       gap='4'
@@ -12,7 +14,7 @@ const DesktopLayout = () => {
       alignItems='center'
       justifyContent='center'
       overflow='hidden'
-      bg='brand.dashboardBg'
+      bg={dashboardBg}
       backgroundSize='cover'
       backgroundPosition='center'
     >

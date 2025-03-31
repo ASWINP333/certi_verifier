@@ -25,7 +25,7 @@ const RenderCertificateTemplate = ({ templateData, ...rest }) => {
   };
 
   const renderCertificate = (templateId) => {
-    if (templateId === '12345') {
+    if (templateId) {
       return 'CertificateTemplate1';
     }
     return 'default';

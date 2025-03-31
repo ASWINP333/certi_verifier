@@ -8,6 +8,14 @@ const getMyCertificates = async () => {
   return { data, status, statusText };
 };
 
+const getInstitutionCertificates = async () => {
+  const { data, status, statusText } = await axiosInstance.get(
+    `certificate/institutionCertificates`
+  );
+
+  return { data, status, statusText };
+};
+
 const updateCertificate = async ({ id, updatedData }) => {
   const { data, status, statusText } = await axiosInstance.put(
     `certificate/update/${id}`,
@@ -24,4 +32,9 @@ const deleteCertificate = async (id) => {
 
   return { data, status, statusText };
 };
-export { getMyCertificates, updateCertificate, deleteCertificate };
+export {
+  getMyCertificates,
+  updateCertificate,
+  deleteCertificate,
+  getInstitutionCertificates,
+};

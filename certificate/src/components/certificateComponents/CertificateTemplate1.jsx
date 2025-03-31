@@ -3,7 +3,6 @@ import { Box, Flex, Image, Text } from '@chakra-ui/react';
 import { useRef } from 'react';
 import React from 'react';
 import useWidth from '../../helpers/hooks/useWidthHook';
-import { certificateFrame2 } from '../../assets';
 
 const CertificateTemplate1 = ({
   templateData,
@@ -61,7 +60,7 @@ const CertificateTemplate1 = ({
             mt='20%'
             {...textCenterStyle}
           >
-            {certificateName}
+            {course}
           </Text>
           <Text
             htmlFor='certificate-for'
@@ -70,7 +69,7 @@ const CertificateTemplate1 = ({
             fontFamily='Poppins'
             {...textCenterStyle}
           >
-            Certificate of Completion
+            {certificateName}
           </Text>
           <Text
             htmlFor='full-name'

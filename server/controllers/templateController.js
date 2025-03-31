@@ -100,9 +100,8 @@ const deleteTemplate = async (req, res) => {
   }
 };
 
-
 export const templateController = {
   createTemplate,
   getTemplates,
-  deleteTemplate
+  deleteTemplate,
 };

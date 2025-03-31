@@ -12,6 +12,8 @@ import CreateCertificate from './certificates/createCertificate';
 import Report from './report';
 import Templates from './templates';
 import CreateTemplate from './templates/createTemplate';
+import StudentList from './students';
+import CreateStudent from './students/createStudents';
 
 export {
   Login,
@@ -28,4 +30,6 @@ export {
   Report,
   Templates,
   CreateTemplate,
+  StudentList,
+  CreateStudent,
 };

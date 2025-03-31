@@ -10,6 +10,10 @@ import Logout from './logout';
 const DesktopSidebar = () => {
   const user = getItemFromLocalStorage('user');
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const role = user?.role;
+  console.log(role);
+
   return (
     <Flex w='16rem' h='100vh' bg='brand.sidebarMainBg'>
       <Flex
@@ -49,30 +53,44 @@ const DesktopSidebar = () => {
             </Link>
             <Divider w='12rem' borderColor='brand.mainTeal' />
           </Flex>
-          <Flex direction='column' alignItems='center' gap='4'>
-            <Link to='/user/institutions'>
-              <Text color='brand.white'>Institutions</Text>
-            </Link>
-            <Divider w='12rem' borderColor='brand.mainTeal' />
-          </Flex>
-          <Flex direction='column' alignItems='center' gap='4'>
-            <Link to='/user/users'>
-              <Text color='brand.white'>Users List</Text>
-            </Link>
-            <Divider w='12rem' borderColor='brand.mainTeal' />
-          </Flex>
+          {role === 'Admin' && (
+            <Flex direction='column' alignItems='center' gap='4'>
+              <Link to='/user/institutions'>
+                <Text color='brand.white'>Institutions</Text>
+              </Link>
+              <Divider w='12rem' borderColor='brand.mainTeal' />
+            </Flex>
+          )}
+          {(role === 'Admin' || role === 'Owner') && (
+            <Flex direction='column' alignItems='center' gap='4'>
+              <Link to='/user/users'>
+                <Text color='brand.white'>Users List</Text>
+              </Link>
+              <Divider w='12rem' borderColor='brand.mainTeal' />
+            </Flex>
+          )}
+          {role === 'Staff' && (
+            <Flex direction='column' alignItems='center' gap='4'>
+              <Link to='/user/students'>
+                <Text color='brand.white'>Students</Text>
+              </Link>
+              <Divider w='12rem' borderColor='brand.mainTeal' />
+            </Flex>
+          )}
           <Flex direction='column' alignItems='center' gap='4'>
             <Link to='/user/certificates'>
               <Text color='brand.white'>Certificates</Text>
             </Link>
             <Divider w='12rem' borderColor='brand.mainTeal' />
           </Flex>
-          <Flex direction='column' alignItems='center' gap='4'>
-            <Link to='/user/report'>
-              <Text color='brand.white'>Report</Text>
-            </Link>
-            <Divider w='12rem' borderColor='brand.mainTeal' />
-          </Flex>
+          {(role === 'Staff' || role === 'Owner' || role === 'Admin') && (
+            <Flex direction='column' alignItems='center' gap='4'>
+              <Link to='/user/report'>
+                <Text color='brand.white'>Report</Text>
+              </Link>
+              <Divider w='12rem' borderColor='brand.mainTeal' />
+            </Flex>
+          )}
           <Flex direction='column' alignItems='center' gap='4'>
             <Link to='/user/settings'>
               <Text color='brand.white'>Settings</Text>

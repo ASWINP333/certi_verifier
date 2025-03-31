@@ -7,12 +7,12 @@ import { useEffect } from 'react';
 
 const CreateCertificate = () => {
   const [cId, setCId] = useState('');
-  const [candidateName, setCandidateName] = useState('');
   const [certificateName, setCertificateName] = useState('');
   const [templates, setTemplates] = useState([]);
-  const [course, setCourse] = useState('');
+  const [students, setStudents] = useState([]);
   const [grade, setGrade] = useState('');
   const [template, setTemplate] = useState('');
+  const [studentId, setStudentId] = useState('');
   const [loading, setloading] = useState(false);
   const toast = useToast();
 
@@ -20,7 +20,10 @@ const CreateCertificate = () => {
 
   useEffect(() => {
     let isMounted = true;
-    if (isMounted) getTemplates();
+    if (isMounted) {
+      getTemplates();
+      getStudents();
+    }
 
     return () => {
       isMounted = false;
@@ -40,6 +43,20 @@ const CreateCertificate = () => {
     }
   };
 
+  const getStudents = async () => {
+    try {
+      const { data, status, statusText } =
+        await axiosInstance.get(`student/myStudents`);
+
+      if (status === 200 && statusText === 'OK') {
+        console.log(data?.data);
+        setStudents(data?.data);
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -47,17 +64,14 @@ const CreateCertificate = () => {
 
       const certificateData = {
         cId: cId,
-        candidateName: candidateName,
         certificateName: certificateName,
-        course: course,
         grade: grade,
         templateId: template,
+        student: studentId,
       };
 
-      console.log(certificateData);
-
       const response = await axiosInstance.post(
-        `certificate/create`,
+        `certificate/student/create`,
         certificateData
       );
 
@@ -122,17 +136,6 @@ const CreateCertificate = () => {
               onChange={(e) => setCId(e.target.value)}
             />
             <FormInput
-              label='Candidate Name'
-              id='candidateName'
-              type='text'
-              isRequired={true}
-              w='90%'
-              labelColor='brand.white'
-              onChange={(e) => setCandidateName(e.target.value)}
-            />
-          </Flex>
-          <Flex w='full'>
-            <FormInput
               label='Certificate Name'
               id='certificateName'
               type='text'
@@ -141,17 +144,27 @@ const CreateCertificate = () => {
               labelColor='brand.white'
               onChange={(e) => setCertificateName(e.target.value)}
             />
-            <FormInput
-              label='Course'
-              id='course'
-              type='text'
-              isRequired={true}
-              w='90%'
-              labelColor='brand.white'
-              onChange={(e) => setCourse(e.target.value)}
-            />
           </Flex>
           <Flex w='full'>
+            <SelectInput
+              id='student'
+              name='student'
+              validator={{
+                required: 'Choose a Student',
+              }}
+              w='90%'
+              options={students.map((item) => ({
+                label: `${item?.firstName} ${item?.lastName}`,
+                value: item?._id,
+              }))}
+              optionProps={{
+                background: '#0996A1',
+                color: '#ffffff',
+              }}
+              onChange={(e) => setStudentId(e.target.value)}
+            >
+              Select Student
+            </SelectInput>
             <FormInput
               label='Grade'
               id='grade'
@@ -161,13 +174,15 @@ const CreateCertificate = () => {
               labelColor='brand.white'
               onChange={(e) => setGrade(e.target.value)}
             />
+          </Flex>
+          <Flex w='full'>
             <SelectInput
               id='institutionDetails'
               name='institutionDetails'
               validator={{
                 required: 'Choose a institution',
               }}
-              w='90%'
+              w='45%'
               options={templates.map((item) => ({
                 label: item?.templateName,
                 value: item?._id,
