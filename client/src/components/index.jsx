@@ -25,5 +25,5 @@ export {
   DateInput,
   FileUploadInput,
   ColorModeSwitch,
-  SelectInputWithImage
+  SelectInputWithImage,
 };

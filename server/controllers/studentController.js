@@ -127,7 +127,7 @@ const loginStudent = async (req, res) => {
         status: 'success',
         message: `Welcome back ${firstName} ${lastName}`,
         token: await generateToken(_id),
-        student
+        student,
       });
     }
 

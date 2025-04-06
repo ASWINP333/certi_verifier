@@ -30,6 +30,10 @@ certificateRoutes
   .get(authenticate.user, certificateController.getCertificatesByDate);
 
 certificateRoutes
+  .route('/get/date-course')
+  .get(authenticate.user, certificateController.getCertificatesByDateAndCourse);
+
+certificateRoutes
   .route('/myCertificates')
   .get(authenticate.user, certificateController.getMyCertificates);
 

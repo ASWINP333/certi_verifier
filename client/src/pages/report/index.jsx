@@ -6,10 +6,11 @@ import {
   Spinner,
   useToast,
 } from '@chakra-ui/react';
-import { DateInput, SimpleTableComponent } from '../../components';
+import { DateInput, FormInput, SimpleTableComponent } from '../../components';
 import { useEffect, useMemo, useState } from 'react';
 import axiosInstance from '../../config/axiosInstance';
 import * as XLSX from 'xlsx';
+import { getItemFromLocalStorage } from '../../functions/localStorage';
 
 const Report = () => {
   const [certificateData, setCertificateData] = useState([]);
@@ -17,6 +18,11 @@ const Report = () => {
   const [btnLoading, setBtnLoading] = useState(false);
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
+  const [course, setCourse] = useState('');
+
+  const user = getItemFromLocalStorage('user');
+  const role = user?.role;
+
   const toast = useToast();
 
   // Get the first day of the current month and the current day as the end date
@@ -45,15 +51,19 @@ const Report = () => {
   const getUsersData = async (start, end) => {
     try {
       setLoading(true);
-      console.log(start, end);
+      let endPoint;
 
-      const response = await axiosInstance.get(
-        `certificate/get/date?startDate=${start}&endDate=${end}`
-      );
+      if (role === 'Owner') {
+        endPoint = `certificate/get/date-course?startDate=${start}&endDate=${end}&course=${course}`;
+      } else {
+        endPoint = `certificate/get/date?startDate=${start}&endDate=${end}`;
+      }
+
+      const response = await axiosInstance.get(endPoint);
       if (
         response.data.status === 'success' &&
         response?.data?.certificates.length > 0
-      ) {
+      ) {     
         setCertificateData(response?.data?.certificates);
       } else {
         toast({
@@ -192,7 +202,7 @@ const Report = () => {
                   id='startDate'
                   value={startDate}
                   isRequired={true}
-                  w='15rem'
+                  w='12rem'
                   labelColor='brand.white'
                   onChange={(e) => setStartDate(e.target.value)}
                 />
@@ -201,10 +211,23 @@ const Report = () => {
                   id='endDate'
                   value={endDate}
                   isRequired={true}
-                  w='15rem'
+                  w='12rem'
                   labelColor='brand.white'
                   onChange={(e) => setEndDate(e.target.value)}
                 />
+               {
+                role === 'Owner' && (
+                  <FormInput
+                  label='course'
+                  id='course'
+                  type='text'
+                  isRequired={true}
+                  w='12rem'
+                  labelColor='brand.white'
+                  onChange={(e) => setCourse(e.target.value)}
+                />
+                )
+               }
                 <Flex gap='2'>
                   <Button
                     w='10rem'

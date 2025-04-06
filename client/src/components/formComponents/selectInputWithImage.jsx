@@ -22,7 +22,9 @@ const SelectInputWithImage = ({
       <Select
         options={options}
         value={selectedOption}
-        onChange={(selected) => onChange({ target: { value: selected?.value } })}
+        onChange={(selected) =>
+          onChange({ target: { value: selected?.value } })
+        }
         getOptionLabel={(e) => (
           <Flex align='center' gap='2'>
             <Image

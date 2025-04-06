@@ -58,17 +58,24 @@ const Certificates = () => {
         Header: 'Actions',
         accessor: (cell) => (
           <Flex alignItems='center' justify='center' p='0'>
-            <Button
+            <Flex
               as={Link}
               href={`/certificate?cId=${cell?.cId}&iId=${cell?.institutionDetails?.iId}`}
               target='_blank'
               variant='unstyled'
-              bg='transparent'
+              bg='brand.mainTeal'
               color='brand.white'
+              px='2'
+              py='1'
+              w='6rem'
+              alignItems='center'
+              justify='center'
+              borderRadius='0.5rem'
+              fontSize='0.9rem'
               _hover={{ bg: 'transparent' }}
             >
               View
-            </Button>
+            </Flex>
           </Flex>
         ),
       },
@@ -79,7 +86,7 @@ const Certificates = () => {
   return (
     <Flex w='100dvw' h='100dvh' overflowX='hidden' overflowY='hidden'>
       <Flex w='100%' h='100%' direction='column' p='10'>
-        <Heading color='brand.mainTeal' textTransform='uppercase'>
+        <Heading color='brand.mainTeal' mx='8' textTransform='uppercase'>
           Certificates
         </Heading>
         {loading ? (

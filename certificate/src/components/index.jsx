@@ -5,6 +5,8 @@ import PasswordInput from './formComponents/passwordInput';
 import FormInput from './formComponents/formInput';
 import SelectInput from './formComponents/selectInput';
 import SimpleTableComponent from './table/simpleTable';
+import MainModal from './modals/MainModal';
+import Logout from './extras/logOut';
 
 export {
   Footer,
@@ -14,4 +16,6 @@ export {
   FormInput,
   SelectInput,
   SimpleTableComponent,
+  MainModal,
+  Logout,
 };
