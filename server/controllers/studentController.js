@@ -1,11 +1,11 @@
 import sendEmail from '../services/nodemailer.js';
 import {
-  generateOtp,
   generatePassword,
   generateToken,
   hashPassword,
 } from '../utils/authUtilities.js';
 import { Student } from '../models/index.js';
+import bcrypt from 'bcrypt';
 
 const createStudent = async (req, res) => {
   try {
@@ -127,16 +127,7 @@ const loginStudent = async (req, res) => {
         status: 'success',
         message: `Welcome back ${firstName} ${lastName}`,
         token: await generateToken(_id),
-        student: {
-          _id,
-          firstName,
-          lastName,
-          email,
-          phoneNumber,
-          enrollmentNumber,
-          courseDetails,
-          role,
-        },
+        student
       });
     }
 

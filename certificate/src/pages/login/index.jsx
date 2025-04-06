@@ -22,7 +22,7 @@ const Login = () => {
     e.preventDefault();
     try {
       setBtnLoading(true);
-      const response = await axiosInstance.post(`user/login`, {
+      const response = await axiosInstance.post(`student/login`, {
         email,
         password,
       });
@@ -37,8 +37,10 @@ const Login = () => {
           isClosable: true,
         });
 
+        console.log(response?.data);
+
         const token = response?.data?.token;
-        const user = response?.data?.user;
+        const user = response?.data?.student;
 
         authentication.loginIn(token, user, () => {
           navigate('/user/certificates');

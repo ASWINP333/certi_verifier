@@ -42,6 +42,10 @@ certificateRoutes
   .get(certificateController.getSingleCertificate);
 
 certificateRoutes
+  .route('/get/:id')
+  .get(certificateController.getSingleCertificateById);
+
+certificateRoutes
   .route('/update/:cId')
   .put(authenticate.user, certificateController.updateCertificate);
 

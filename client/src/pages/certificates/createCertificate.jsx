@@ -1,5 +1,5 @@
 import { Button, chakra, Flex, Heading, useToast } from '@chakra-ui/react';
-import { FormInput, SelectInput } from '../../components';
+import { FormInput, SelectInput, SelectInputWithImage } from '../../components';
 import { useState } from 'react';
 import axiosInstance from '../../config/axiosInstance';
 import { useNavigate } from 'react-router-dom';
@@ -176,7 +176,7 @@ const CreateCertificate = () => {
             />
           </Flex>
           <Flex w='full'>
-            <SelectInput
+            <SelectInputWithImage
               id='institutionDetails'
               name='institutionDetails'
               validator={{
@@ -186,6 +186,7 @@ const CreateCertificate = () => {
               options={templates.map((item) => ({
                 label: item?.templateName,
                 value: item?._id,
+                image: item?.templateImage?.url,
               }))}
               optionProps={{
                 background: '#0996A1',
@@ -194,7 +195,7 @@ const CreateCertificate = () => {
               onChange={(e) => setTemplate(e.target.value)}
             >
               Select Template
-            </SelectInput>
+            </SelectInputWithImage>
           </Flex>
           <Flex w='95%' justify='space-between'>
             <Button

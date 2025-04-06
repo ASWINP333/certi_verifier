@@ -121,6 +121,9 @@ const createStudentCertificate = async (req, res) => {
       templateId,
     });
 
+    studentData.certificates.push(certificate._id);
+    await studentData.save();
+
     return res.status(201).json({
       status: 'success',
       message: 'Certificate created succesfully',
@@ -322,6 +325,37 @@ const getSingleCertificate = async (req, res) => {
   }
 };
 
+const getSingleCertificateById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const certificate = await Certificate.findById({
+    _id:id
+    })
+      .populate('institutionDetails')
+      .populate('issuedBy')
+      .populate('templateId');
+
+    if (!certificate) {
+      return res.status(404).json({
+        status: 'failed',
+        message: 'Certificate not found',
+      });
+    }
+
+
+    return res.status(200).json({
+      status: 'success',
+      message: 'Certificate fetched successfully',
+      certificate,
+    });
+  } catch (error) {
+    return res.status(400).json({
+      status: 'error',
+      message: 'Something went wrong while fetching certificate',
+    });
+  }
+};
+
 const updateCertificate = async (req, res) => {
   try {
     const { cId } = req.params;
@@ -489,4 +523,5 @@ export const certificateController = {
   getCertificatesByDate,
   createStudentCertificate,
   getInstitutionCertificates,
+  getSingleCertificateById
 };

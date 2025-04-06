@@ -19,8 +19,8 @@ const AuthProvider = ({ children }) => {
   let loginIn = (newToken, user, callback) => {
     return AuthChecker.loginIn(() => {
       if (user) {
-        setItemToLocalStorage('certi-token', newToken);
-        setItemToLocalStorage('user', user);
+        setItemToLocalStorage('certi-student-token', newToken);
+        setItemToLocalStorage('student-user', user);
       }
       setToken(newToken);
       callback();
@@ -30,9 +30,9 @@ const AuthProvider = ({ children }) => {
   // when user logout clear token from localstorage
   let logOut = (callback) => {
     return AuthChecker.logOut(() => {
-      let user = getItemFromLocalStorage('user');
+      let user = getItemFromLocalStorage('student-user');
       if (user) {
-        localStorage.removeItem('certi-token');
+        localStorage.removeItem('certi-student-token');
         clearLocalStorage();
       }
       setToken(null);
@@ -66,8 +66,8 @@ export const useAuthentication = () => {
 export const RequireAuth = ({ children }) => {
   let auth = useAuthentication();
   let location = useLocation();
-  let user = getItemFromLocalStorage('user');
-  let token = getItemFromLocalStorage('certi-token');
+  let user = getItemFromLocalStorage('student-user');
+  let token = getItemFromLocalStorage('certi-student-token');
   auth.user = user;
   auth.token = token;
 

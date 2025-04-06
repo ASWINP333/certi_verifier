@@ -11,8 +11,8 @@ import { MdDelete, MdEdit } from 'react-icons/md';
 import DeleteUser from './deleteUser';
 import UpdateUser from './updateUser';
 import { useQuery } from '@tanstack/react-query';
-import { getMyUsers } from '../../apis/userApis';
 import { useUserList } from '../../store/userStore';
+import { getMyUsers } from '../../apis/userApis';
 const UsersList = () => {
   const { users, setUsers } = useUserList();
   const [loading, setLoading] = useState(true);
