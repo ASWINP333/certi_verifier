@@ -44,11 +44,12 @@ const Report = () => {
     const { startDate, endDate } = getCurrentMonthRange();
     setStartDate(startDate);
     setEndDate(endDate);
-    getUsersData(startDate, endDate);
+    const defCourse = 'MCA';
+    getUsersData(startDate, endDate, defCourse);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const getUsersData = async (start, end) => {
+  const getUsersData = async (start, end, course) => {
     try {
       setLoading(true);
       let endPoint;
@@ -63,7 +64,7 @@ const Report = () => {
       if (
         response.data.status === 'success' &&
         response?.data?.certificates.length > 0
-      ) {     
+      ) {
         setCertificateData(response?.data?.certificates);
       } else {
         toast({
@@ -97,7 +98,7 @@ const Report = () => {
     e.preventDefault();
     if (startDate && endDate) {
       setBtnLoading(true);
-      getUsersData(startDate, endDate);
+      getUsersData(startDate, endDate, course);
     } else {
       toast({
         title: 'Invalid Dates',
@@ -215,19 +216,18 @@ const Report = () => {
                   labelColor='brand.white'
                   onChange={(e) => setEndDate(e.target.value)}
                 />
-               {
-                role === 'Owner' && (
+                {role === 'Owner' && (
                   <FormInput
-                  label='course'
-                  id='course'
-                  type='text'
-                  isRequired={true}
-                  w='12rem'
-                  labelColor='brand.white'
-                  onChange={(e) => setCourse(e.target.value)}
-                />
-                )
-               }
+                    label='course'
+                    id='course'
+                    type='text'
+                    isRequired={true}
+                    w='12rem'
+                    labelColor='brand.white'
+                    defaultValue='MCA'
+                    onChange={(e) => setCourse(e.target.value)}
+                  />
+                )}
                 <Flex gap='2'>
                   <Button
                     w='10rem'

@@ -17,6 +17,7 @@ import DeleteCertificate from './deleteCertificate';
 import { useCertificateList } from '../../store/certificateStore';
 import { useQuery } from '@tanstack/react-query';
 import {
+  getAllCertificates,
   getInstitutionCertificates,
   getMyCertificates,
 } from '../../apis/certificateApis';
@@ -34,6 +35,7 @@ const CertificateList = () => {
 
   const isOwner = user?.role === 'Owner';
   const isStaff = user?.role === 'Staff';
+  const isAdmin = user?.role === 'Admin';
 
   const {
     isOpen: isModalOpen,
@@ -54,6 +56,8 @@ const CertificateList = () => {
         let response;
         if (isOwner) {
           response = await getInstitutionCertificates();
+        } else if (isAdmin) {
+          response = await getAllCertificates();
         } else {
           response = await getMyCertificates();
         }

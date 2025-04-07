@@ -19,7 +19,7 @@ const StudentList = () => {
   const { isOpen, onOpen, onClose } = useDisclosure(); // delete modal
 
   useQuery({
-    queryKey: ['users'],
+    queryKey: ['students'],
     queryFn: async () => {
       try {
         const response = await getMyStudents();

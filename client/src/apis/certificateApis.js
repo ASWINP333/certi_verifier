@@ -16,6 +16,13 @@ const getInstitutionCertificates = async () => {
   return { data, status, statusText };
 };
 
+const getAllCertificates = async () => {
+  const { data, status, statusText } =
+    await axiosInstance.get(`certificate/getAll`);
+
+  return { data, status, statusText };
+};
+
 const updateCertificate = async ({ id, updatedData }) => {
   const { data, status, statusText } = await axiosInstance.put(
     `certificate/update/${id}`,
@@ -37,4 +44,5 @@ export {
   updateCertificate,
   deleteCertificate,
   getInstitutionCertificates,
+  getAllCertificates,
 };

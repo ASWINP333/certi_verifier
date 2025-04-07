@@ -24,7 +24,7 @@ studentRoute
   .get(authenticate.user, studentController.getMyStudents);
 
 studentRoute
-  .route('/delete/:id')
-  .get(authenticate.user, studentController.deleteStudent);
+  .route('/delete/:studentId')
+  .delete(studentController.deleteStudent);
 
 export default studentRoute;

@@ -629,5 +629,5 @@ export const certificateController = {
   createStudentCertificate,
   getInstitutionCertificates,
   getSingleCertificateById,
-  getCertificatesByDateAndCourse
+  getCertificatesByDateAndCourse,
 };

@@ -2,7 +2,7 @@ import { Button, Flex, Text, useToast } from '@chakra-ui/react';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { deleteUser } from '../../apis/userApis';
+import { deleteStudent } from '../../apis/studentApis';
 
 const DeleteUser = ({ onClose, id }) => {
   const [loading, setLoading] = useState(false);
@@ -12,9 +12,9 @@ const DeleteUser = ({ onClose, id }) => {
 
   const mutatedData = useMutation({
     mutationFn: (id) => {
-      return deleteUser(id);
+      return deleteStudent(id);
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['users'] }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['students'] }),
     onError: (err) => {
       console.log(err.message);
     },

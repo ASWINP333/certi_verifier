@@ -13,7 +13,7 @@ const PeiChart = ({ chartSeries }) => {
 
   const chartOptions = {
     chart: {
-      type: 'pie',
+      type: 'donut',
     },
     labels: labels,
     responsive: [
