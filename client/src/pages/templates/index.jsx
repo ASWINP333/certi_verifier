@@ -67,7 +67,7 @@ const Templates = () => {
     []
   );
   return (
-    <Flex w='100%' h='100vh'>
+    <Flex w='100%' h='100vh'bg={'brand.bg'}>
       <Flex
         w='100%'
         h='100%'

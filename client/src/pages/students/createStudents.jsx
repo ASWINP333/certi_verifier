@@ -63,7 +63,7 @@ const CreateStudent = () => {
   };
 
   return (
-    <Flex w='100%' h='100vh'>
+    <Flex w='100%' h='100vh' bg={'brand.bg'}>
       <Flex
         w='100%'
         h='100%'
@@ -176,7 +176,7 @@ const CreateStudent = () => {
               borderRadius='0.7rem'
               size='sm'
               onClick={() => {
-                navigate('/user/institutions');
+                navigate('/user/students');
               }}
             >
               Back

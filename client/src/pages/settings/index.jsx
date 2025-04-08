@@ -35,7 +35,7 @@ const Settings = () => {
   const { mainCardBg, mainColor } = useThemeColors();
 
   return (
-    <Flex w='100%' h='100vh'>
+    <Flex w='100%' h='100vh' bg={'brand.bg'}>
       <Flex
         w='100%'
         h='100%'
@@ -136,7 +136,7 @@ const Settings = () => {
                 Edit
               </Button>
             </Flex>
-            <Flex w='50rem' h='6rem' justify='space-between'>
+            {/* <Flex w='50rem' h='6rem' justify='space-between'>
               <Flex direction='column' gap='4'>
                 <Text
                   color='brand.mainTeal'
@@ -150,7 +150,7 @@ const Settings = () => {
                 </Text>
               </Flex>
               <ColorModeSwitch mt='4' mx='6' />
-            </Flex>
+            </Flex> */}
           </Flex>
         </Flex>
       </Flex>

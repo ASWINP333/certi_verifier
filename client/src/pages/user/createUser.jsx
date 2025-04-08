@@ -106,7 +106,7 @@ const CreateUser = () => {
   };
 
   return (
-    <Flex w='100%' h='100vh'>
+    <Flex w='100%' h='100vh' bg={'brand.bg'}>
       <Flex
         w='100%'
         h='100%'
@@ -211,7 +211,7 @@ const CreateUser = () => {
               borderRadius='0.7rem'
               size='sm'
               onClick={() => {
-                navigate('/user/institutions');
+                navigate('/user/users');
               }}
             >
               Back
