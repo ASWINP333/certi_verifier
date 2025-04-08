@@ -107,7 +107,7 @@ const createStudentCertificate = async (req, res) => {
       });
     }
 
-    const studentName = studentData?.firstName + studentData?.lastName;
+    const studentName = `${studentData?.firstName} ${studentData?.lastName}`;
     const courseName = studentData?.courseDetails;
     const certificate = await Certificate.create({
       cId,

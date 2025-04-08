@@ -220,7 +220,7 @@ const getMyStudents = async (req, res) => {
 
 const deleteStudent = async (req, res) => {
   try {
-    const {studentId} = req.params
+    const { studentId } = req.params;
 
     console.log('Student ID:', studentId);
 

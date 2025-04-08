@@ -21,8 +21,26 @@ const CreateUser = () => {
   const user = getItemFromLocalStorage('user');
   const role = user?.role;
 
+  const isValidPhoneNumber = (phone) => {
+    const phoneRegex = /^[0-9]{10}$/; // You can adjust this to your country format
+    return phoneRegex.test(phone);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!isValidPhoneNumber(phoneNumber)) {
+      toast({
+        title: 'Invalid Phone Number',
+        description: 'Please enter a valid 10-digit phone number.',
+        status: 'error',
+        position: 'top',
+        duration: 1500,
+        isClosable: true,
+      });
+      return;
+    }
+
     try {
       setBtnLoading(true);
 
@@ -133,7 +151,7 @@ const CreateUser = () => {
             <FormInput
               label='Email'
               id='email'
-              type='text'
+              type='email'
               isRequired={true}
               w='90%'
               labelColor='brand.white'

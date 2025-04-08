@@ -21,6 +21,7 @@ const userSchema = mongoose.Schema(
     phoneNumber: {
       type: Number,
       required: [true, 'please enter a phone number'],
+      unique: true,
     },
     institutionDetails: {
       type: mongoose.Schema.Types.ObjectId,

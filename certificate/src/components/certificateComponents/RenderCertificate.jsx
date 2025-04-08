@@ -2,11 +2,19 @@ import { Flex, Text } from '@chakra-ui/react';
 
 import React from 'react';
 import CertificateTemplate1 from './CertificateTemplate1';
+import CertificateTemplate2 from './CertificateTemplate2';
+import CertificateTemplate3 from './CertificateTemplate3';
 
 const RenderCertificateTemplate = ({ templateData, ...rest }) => {
   const certificatePreviews = {
     CertificateTemplate1: () => (
       <CertificateTemplate1 templateData={templateData} {...rest} />
+    ),
+    CertificateTemplate2: () => (
+      <CertificateTemplate2 templateData={templateData} {...rest} />
+    ),
+    CertificateTemplate3: () => (
+      <CertificateTemplate3 templateData={templateData} {...rest} />
     ),
     default: () => (
       <Flex
@@ -25,8 +33,12 @@ const RenderCertificateTemplate = ({ templateData, ...rest }) => {
   };
 
   const renderCertificate = (templateId) => {
-    if (templateId) {
+    if (templateId === 'TMP1') {
       return 'CertificateTemplate1';
+    } else if (templateId === 'TMP2') {
+      return 'CertificateTemplate2';
+    } else if (templateId === 'TMP3') {
+      return 'CertificateTemplate3';
     }
     return 'default';
   };

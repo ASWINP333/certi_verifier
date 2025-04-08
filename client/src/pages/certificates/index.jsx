@@ -118,8 +118,8 @@ const CertificateList = () => {
         accessor: 'certificateName',
       },
       {
-        Header: 'Institution Name',
-        accessor: (row) => row?.institutionDetails?.institutionName || 'N/A',
+        Header: 'Course',
+        accessor: 'course',
       },
       {
         Header: 'Status',

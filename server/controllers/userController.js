@@ -172,6 +172,8 @@ const createUser = async (req, res) => {
       role,
     });
 
+    console.log(password);
+
     if (user) {
       sendEmail({
         to: email,

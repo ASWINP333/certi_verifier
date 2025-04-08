@@ -10,8 +10,11 @@ const getDashboardValues = async (req, res) => {
 
     const certificates =
       role === 'Admin'
-        ? await Certificate.find({ issuedBy: userId })
-        : await Certificate.find({ institutionDetails: institutionId });
+        ? await Certificate.find()
+        : role === 'Owner'
+          ? await Certificate.find({ institutionDetails: institutionId })
+          : await Certificate.find({ issuedBy: userId });
+
     const institution = await Institution.find();
     const users =
       role === 'Staff'

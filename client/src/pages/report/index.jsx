@@ -118,10 +118,6 @@ const Report = () => {
         accessor: 'cId',
       },
       {
-        Header: 'Institution Name',
-        accessor: (row) => row?.institutionDetails?.institutionName || 'N/A',
-      },
-      {
         Header: 'Candidate Name',
         accessor: 'candidateName',
       },
@@ -136,6 +132,11 @@ const Report = () => {
       {
         Header: 'Certificate Name',
         accessor: 'certificateName',
+      },
+      {
+        Header: 'Issued By',
+        accessor: (row) =>
+          `${row?.issuedBy?.firstName} ${row?.issuedBy?.lastName}`,
       },
       {
         Header: 'status',

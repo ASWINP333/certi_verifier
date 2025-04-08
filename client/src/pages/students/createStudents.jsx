@@ -1,5 +1,5 @@
 import { Button, chakra, Flex, Heading, useToast } from '@chakra-ui/react';
-import { FormInput } from '../../components';
+import { FormInput, SelectInput } from '../../components';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../config/axiosInstance';
@@ -134,15 +134,35 @@ const CreateStudent = () => {
               labelColor='brand.white'
               onChange={(e) => setEnrollmentNumber(e.target.value)}
             />
-            <FormInput
-              label='courseDetails'
+            <SelectInput
               id='courseDetails'
-              type='text'
-              isRequired={true}
+              name='courseDetails'
+              validator={{
+                required: 'Choose a course',
+              }}
               w='90%'
-              labelColor='brand.white'
+              options={[
+                {
+                  label: 'MCA',
+                  value: 'MCA',
+                },
+                {
+                  label: 'BCA',
+                  value: 'BCA',
+                },
+                {
+                  label: 'IMCA',
+                  value: 'IMCA',
+                },
+              ]}
+              optionProps={{
+                background: '#0996A1',
+                color: '#ffffff',
+              }}
               onChange={(e) => setCourseDetails(e.target.value)}
-            />
+            >
+              Course
+            </SelectInput>
           </Flex>
           <Flex w='95%' justify='space-between'>
             <Button
