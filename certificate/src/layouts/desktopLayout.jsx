@@ -45,23 +45,25 @@ const DesktopLayout = () => {
         </Flex>
       )}
 
-      <Flex
-        as={Link}
-        to='/login'
-        pos='absolute'
-        right='4'
-        top='6'
-        color='brand.white'
-        alignItems='center'
-        gap='2'
-        textTransform='capitalize'
-        py='2'
-        px='4'
-        borderRadius='2rem'
-        cursor='pointer'
-      >
-        <FaUser size='1.2rem' />
-      </Flex>
+      {!user && (
+        <Flex
+          as={Link}
+          to='/login'
+          pos='absolute'
+          right='4'
+          top='6'
+          color='brand.white'
+          alignItems='center'
+          gap='2'
+          textTransform='capitalize'
+          py='2'
+          px='4'
+          borderRadius='2rem'
+          cursor='pointer'
+        >
+          <FaUser size='1.2rem' />
+        </Flex>
+      )}
       <Flex w='100%' h='100%'>
         <Outlet />
       </Flex>
