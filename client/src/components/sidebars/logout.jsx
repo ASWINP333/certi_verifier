@@ -23,7 +23,7 @@ const Logout = ({ onClose }) => {
       gap='2'
     >
       <Flex w='full'>
-        <Text fontSize={{ base: '1.2rem' }}>
+        <Text fontSize={{ base: '1.2rem' }} color={'brand.dark'}>
           Are you sure you want to logout?
         </Text>
       </Flex>
