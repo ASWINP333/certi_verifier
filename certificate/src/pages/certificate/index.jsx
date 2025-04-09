@@ -4,12 +4,15 @@ import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import dayjs from 'dayjs';
 import axiosInstance from '../../config/axiosInstance';
+import CertificateDownload from '../../components/certificateDownload/CertificateDownload';
+import { getItemFromLocalStorage } from '../../functions/localStorage';
 
 const Certificate = () => {
   const [certificateData, setCertificateData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [blockchainData, setBlockchainData] = useState({});
 
+  const user = getItemFromLocalStorage('student-user');
   const { search } = useLocation();
   const toast = useToast();
 
@@ -92,7 +95,9 @@ const Certificate = () => {
             </Flex>
           ) : (
             <Flex w={{ base: '60%' }} alignItems='center' justify='center'>
-              <Flex w={{ base: '80%' }}>
+             {
+              !user ? (
+                <Flex w={{ base: '80%' }}>
                 <RenderCertificateTemplate
                   {...{
                     templateData: certificateData?.templateData,
@@ -107,6 +112,28 @@ const Certificate = () => {
                   }}
                 />
               </Flex>
+              ) : (
+                <Flex w={{ base: '80%' }}>
+                <CertificateDownload
+                  {...{
+                    templateData: certificateData?.templateData,
+                    certificateId: certificateData?.certificateId,
+                    certificateName: certificateData?.certificateName,
+                    candidateName: certificateData?.candidateName,
+                    course: certificateData?.course,
+                    grade: certificateData?.grade,
+                    institutionName: certificateData?.institutionName,
+                    createdDate: certificateData?.createdDate,
+                    previewSizeMultiplier: previewSizeMultiplier,
+                  }}
+                >
+                  Download
+                </CertificateDownload>
+              </Flex>
+              )
+             }
+
+              
             </Flex>
           )}
           <Flex
