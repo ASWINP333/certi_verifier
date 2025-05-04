@@ -59,7 +59,13 @@ const Login = () => {
     }
   };
   return (
-    <Flex w='100dvw' h='100dvh' overflowX='hidden' overflowY='hidden' bg={'brand.bg'}>
+    <Flex
+      w='100dvw'
+      h='100dvh'
+      overflowX='hidden'
+      overflowY='hidden'
+      bg={'brand.bg'}
+    >
       <Flex w='100%' h='100%' alignItems='center' justify='center'>
         <Flex
           w='30rem'

@@ -616,6 +616,60 @@ const getCertificatesByDateAndCourse = async (req, res) => {
   }
 };
 
+const getCertificatesByDateAndInstitution = async (req, res) => {
+  try {
+    const { startDate, endDate, institution } = req.query;
+
+    // Validate date range
+    if (!startDate || !endDate) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'Start date and end date are required',
+      });
+    }
+
+    // Parse dates and ensure valid format
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    end.setHours(23, 59, 59, 999); // Set the end date to the end of the day
+
+    if (isNaN(start) || isNaN(end)) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'Invalid date format',
+      });
+    }
+
+    // Find certificates within the date range and sort by createdAt (ascending)
+    const certificates = await Certificate.find({
+      createdAt: { $gte: start, $lte: end },
+      institutionDetails: institution,
+    })
+      .populate('institutionDetails')
+      .populate('issuedBy')
+      .sort({ createdAt: 1 });
+
+    if (!certificates.length) {
+      return res.status(404).json({
+        status: 'error',
+        message: 'No certificates found for the given date range',
+      });
+    }
+
+    return res.status(200).json({
+      status: 'success',
+      message: 'Certificates fetched successfully',
+      certificates,
+    });
+  } catch (error) {
+    console.error('Error fetching certificates by date:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Something went wrong while getting certificates',
+    });
+  }
+};
+
 export const certificateController = {
   createCertificate,
   verifyCertificate,
@@ -630,4 +684,5 @@ export const certificateController = {
   getInstitutionCertificates,
   getSingleCertificateById,
   getCertificatesByDateAndCourse,
+  getCertificatesByDateAndInstitution,
 };
